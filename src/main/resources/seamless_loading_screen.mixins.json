@@ -1,0 +1,19 @@
+{
+  "minVersion": "0.8",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "seamless_loading_screen.refmap.json",
+  "package": "com.daderpduck.seamless_loading_screen.mixin",
+  "client": [
+    "ConnectingScreenMixin",
+    "MinecraftMixin",
+    "WindowAccessor",
+    "WorldSelectionListMixin",
+    "WorldLoadProgressScreenMixin",
+    "WorkingScreenMixin",
+    "IngameMenuScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

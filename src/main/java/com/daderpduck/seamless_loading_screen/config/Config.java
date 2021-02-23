@@ -20,16 +20,20 @@ public class Config {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
 
         HoldTime = builder
-            .comment("Delay for Loading Chunks")
+            .comment("Delay before fade for chunks to load")
+            .translation("seamless_loading_screen.config.holdTime.desc")
             .defineInRange("HoldTime", 80, 0, Integer.MAX_VALUE);
         FadeTime = builder
-            .comment("Fade Duration")
+            .comment("Fade duration")
+            .translation("seamless_loading_screen.config.fadeTime.desc")
             .defineInRange("FadeTime", 20, 0, Integer.MAX_VALUE);
         DisableCamera = builder
-            .comment("Disable Camera Movement until the Fade is Done")
+            .comment("Disables camera movement until fade is complete")
+            .translation("seamless_loading_screen.config.disableCamera.desc")
             .define("DisableCamera", true);
         Resolution = builder
-            .comment("Screenshot Resolution")
+            .comment("Screenshot resolution")
+            .translation("seamless_loading_screen.config.resolution.desc")
             .defineEnum("Resolution", ScreenshotResolution.NORMAL);
 
         CONFIG = builder.build();

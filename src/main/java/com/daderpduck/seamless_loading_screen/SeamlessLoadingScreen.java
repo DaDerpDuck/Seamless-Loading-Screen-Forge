@@ -35,8 +35,6 @@ public class SeamlessLoadingScreen
     private void doClientStuff(final FMLClientSetupEvent event) {
         Minecraft minecraft = event.getMinecraftSupplier().get();
 
-
-
         try {
             String gameDirPath = minecraft.gameDir.getPath();
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/singleplayer"));

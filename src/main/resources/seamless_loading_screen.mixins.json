@@ -8,6 +8,7 @@
     "ConnectingScreenMixin",
     "MinecraftMixin",
     "WindowAccessor",
+    "GameRendererMixin",
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
     "WorkingScreenMixin",

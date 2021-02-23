@@ -36,7 +36,7 @@ public class ScreenshotTaker extends Screen {
             hideGUI = mc.gameSettings.hideGUI;
 
             mc.gameSettings.hideGUI = true;
-            Config.ScreenshotResolution resolution = Config.CLIENT.Resolution.get();
+            Config.ScreenshotResolution resolution = Config.Resolution.get();
             resizeScreen(mc, resolution.width, resolution.height);
             mc.displayGuiScreen(new ScreenshotTaker());
         }

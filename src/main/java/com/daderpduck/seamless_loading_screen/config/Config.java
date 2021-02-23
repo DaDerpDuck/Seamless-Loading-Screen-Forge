@@ -8,15 +8,31 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.io.File;
 
 public class Config {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-    public static final Client CLIENT = new Client(BUILDER);
-    public static final ForgeConfigSpec CONFIG = BUILDER.build();
+    public static final ForgeConfigSpec CONFIG;
+    public static final ForgeConfigSpec.ConfigValue<Integer> HoldTime;
+    public static final ForgeConfigSpec.ConfigValue<Integer> FadeTime;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> DisableCamera;
+    public static final ForgeConfigSpec.ConfigValue<ScreenshotResolution> Resolution;
 
-    public static void init(String pathName) {
-        SeamlessLoadingScreen.LOGGER.info("Loading config: " + pathName);
-        CommentedFileConfig file = CommentedFileConfig.builder(new File(pathName)).sync().autosave().writingMode(WritingMode.REPLACE).build();
-        file.load();
-        SeamlessLoadingScreen.LOGGER.info("Loaded config: " + pathName);
+    private static CommentedFileConfig fileConfig;
+
+    static {
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+
+        HoldTime = builder
+            .comment("Delay for Loading Chunks")
+            .defineInRange("HoldTime", 80, 0, Integer.MAX_VALUE);
+        FadeTime = builder
+            .comment("Fade Duration")
+            .defineInRange("FadeTime", 20, 0, Integer.MAX_VALUE);
+        DisableCamera = builder
+            .comment("Disable Camera Movement until the Fade is Done")
+            .define("DisableCamera", true);
+        Resolution = builder
+            .comment("Screenshot Resolution")
+            .defineEnum("Resolution", ScreenshotResolution.NORMAL);
+
+        CONFIG = builder.build();
     }
 
     public enum ScreenshotResolution {
@@ -32,25 +48,14 @@ public class Config {
         }
     }
 
-    public static class Client {
-        public final ForgeConfigSpec.ConfigValue<Integer> HoldTime;
-        public final ForgeConfigSpec.ConfigValue<Integer> FadeTime;
-        public final ForgeConfigSpec.ConfigValue<Boolean> DisableCamera;
-        public final ForgeConfigSpec.ConfigValue<ScreenshotResolution> Resolution;
+    public static void init(String pathName) {
+        SeamlessLoadingScreen.LOGGER.info("Loading config: " + pathName);
+        fileConfig = CommentedFileConfig.builder(new File(pathName)).sync().autosave().writingMode(WritingMode.REPLACE).build();
+        fileConfig.load();
+        SeamlessLoadingScreen.LOGGER.info("Loaded config: " + pathName);
+    }
 
-        public Client(ForgeConfigSpec.Builder builder) {
-            HoldTime = builder
-                    .comment("Delay for Loading Chunks")
-                    .defineInRange("HoldTime", 80, 0, Integer.MAX_VALUE);
-            FadeTime = builder
-                    .comment("Fade Duration")
-                    .defineInRange("FadeTime", 20, 0, Integer.MAX_VALUE);
-            DisableCamera = builder
-                    .comment("Disable Camera Movement until the Fade is Done")
-                    .define("DisableCamera", true);
-            Resolution = builder
-                    .comment("Screenshot Resolution")
-                    .defineEnum("Resolution", ScreenshotResolution.NORMAL);
-        }
+    public static void save() {
+        fileConfig.save();
     }
 }

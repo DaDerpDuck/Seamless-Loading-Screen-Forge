@@ -62,6 +62,5 @@ public class ScreenshotLoader {
 
     public static void resetState() {
         loaded = false;
-        filePath = null;
     }
 }

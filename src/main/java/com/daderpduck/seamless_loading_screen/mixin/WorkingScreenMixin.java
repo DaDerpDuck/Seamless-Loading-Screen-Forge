@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class WorkingScreenMixin {
     @Redirect(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/WorkingScreen;renderBackground(Lcom/mojang/blaze3d/matrix/MatrixStack;)V"))
     private void render(WorkingScreen screen, MatrixStack matrixStack) {
-        ScreenshotRenderer.renderScreenshot(screen, matrixStack);
+        ScreenshotRenderer.renderScreenBackground(screen, matrixStack);
     }
 }

@@ -17,7 +17,7 @@ public class WorldLoadProgressScreenMixin extends Screen {
 
     @Redirect(method = "render(Lcom/mojang/blaze3d/matrix/MatrixStack;IIF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/WorldLoadProgressScreen;renderBackground(Lcom/mojang/blaze3d/matrix/MatrixStack;)V"))
     private void render(WorldLoadProgressScreen screen, MatrixStack stack) {
-        ScreenshotRenderer.renderScreenshot(screen, stack);
+        ScreenshotRenderer.renderScreenBackground(screen, stack);
     }
 
     @Redirect(method = "func_238625_a_(Lcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/world/chunk/listener/TrackingChunkStatusListener;IIII)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/WorldLoadProgressScreen;fill(Lcom/mojang/blaze3d/matrix/MatrixStack;IIIII)V"))

@@ -22,7 +22,7 @@ public class ScreenshotMessageScreen extends DirtMessageScreen {
 
     @Override
     public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ScreenshotRenderer.renderScreenshot(this, matrixStack);
+        ScreenshotRenderer.renderScreenBackground(this, matrixStack);
         drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 70, 16777215);
 
         // Screen.render

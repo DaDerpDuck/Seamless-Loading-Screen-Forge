@@ -22,6 +22,7 @@ import java.io.InputStream;
  */
 public class ScreenshotLoader {
     public static final ResourceLocation SCREENSHOT = new ResourceLocation(SeamlessLoadingScreen.MOD_ID, "screenshot");
+    private static float imageRatio = 1;
     private static boolean loaded = false;
     private static File filePath;
 
@@ -45,11 +46,16 @@ public class ScreenshotLoader {
         try (InputStream in = new FileInputStream(filePath)) {
             if (!filePath.exists()) return;
             NativeImage image = NativeImage.read(in);
+            imageRatio = (float) image.getWidth()/image.getHeight();
             Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
             loaded = true;
         } catch (IOException | SecurityException e) {
             e.printStackTrace();
         }
+    }
+
+    public static float getImageRatio() {
+        return imageRatio;
     }
 
     public static File getCurrentScreenshotPath() {

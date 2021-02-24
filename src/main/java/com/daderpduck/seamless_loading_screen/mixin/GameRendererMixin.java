@@ -32,9 +32,9 @@ public class GameRendererMixin {
         return matrixStack;
     }
 
-    @Inject(method = "updateCameraAndRender(FJZ)V", at = @At("TAIL"))
+    @Inject(method = "updateCameraAndRender(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/IProfiler;endSection()V"))
     private void doFade(float partialTicks, long nanoTime, boolean renderWorldIn, CallbackInfo ci) {
-        if (ScreenshotLoader.isLoaded() && mc.currentScreen == null) {
+        if (ScreenshotLoader.isLoaded()) {
             float fadeTime = Config.FadeTime.get();
             float holdTime = Config.HoldTime.get();
 
@@ -49,10 +49,10 @@ public class GameRendererMixin {
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, (int)(alpha*255));
                 RenderSystem.disableBlend();
 
-                if (timePassed < holdTime)
+                if (timePassed < holdTime && mc.currentScreen == null)
                     AbstractGui.drawCenteredString(matrixStack, mc.fontRenderer, new TranslationTextComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
 
-                timePassed += partialTicks;
+                timePassed += mc.getRenderPartialTicks();
             } else {
                 timePassed = 0;
                 ScreenshotLoader.resetState();

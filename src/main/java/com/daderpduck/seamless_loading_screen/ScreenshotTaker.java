@@ -21,7 +21,8 @@ import java.util.function.Consumer;
  */
 public class ScreenshotTaker extends Screen {
     private static boolean takingScreenshot = false;
-    private static boolean hideGUI = Minecraft.getInstance().gameSettings.hideGUI;
+    private static boolean hideGUI;
+    private static double chatScale;
     private static final List<Consumer<Minecraft>> consumers = new ArrayList<>();
 
     protected ScreenshotTaker() {
@@ -34,8 +35,10 @@ public class ScreenshotTaker extends Screen {
         if (!takingScreenshot && mc.world != null) {
             takingScreenshot = true;
             hideGUI = mc.gameSettings.hideGUI;
+            chatScale = mc.gameSettings.chatScale;
 
             mc.gameSettings.hideGUI = true;
+            mc.gameSettings.chatScale = 0;
             Config.ScreenshotResolution resolution = Config.Resolution.get();
             resizeScreen(mc, resolution.width, resolution.height);
             mc.displayGuiScreen(new ScreenshotTaker());
@@ -71,6 +74,7 @@ public class ScreenshotTaker extends Screen {
         }
 
         mc.gameSettings.hideGUI = hideGUI;
+        mc.gameSettings.chatScale = chatScale;
         takingScreenshot = false;
         resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
 

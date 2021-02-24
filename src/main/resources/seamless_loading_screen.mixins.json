@@ -12,7 +12,8 @@
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
     "WorkingScreenMixin",
-    "IngameMenuScreenMixin"
+    "IngameMenuScreenMixin",
+    "DeathScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

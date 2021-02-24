@@ -1,15 +1,12 @@
 package com.daderpduck.seamless_loading_screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import org.lwjgl.opengl.GL11;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class ScreenshotRenderer {
     public static void renderScreenBackground(Screen screen, MatrixStack stack) {
@@ -32,9 +29,6 @@ public class ScreenshotRenderer {
         float imageRatio = ScreenshotLoader.getImageRatio();
         float windowRatio = (float)mc.getMainWindow().getWidth()/mc.getMainWindow().getHeight();
         float offset = 1 - windowRatio/imageRatio;
-
-        RenderSystem.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        RenderSystem.texParameter(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuffer();

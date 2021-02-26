@@ -6,6 +6,7 @@ import com.daderpduck.seamless_loading_screen.config.Config;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.MouseHelper;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -41,6 +42,7 @@ public class GameRendererMixin {
             float alpha = Math.min(1F - (timePassed - holdTime)/fadeTime, 1F);
 
             if (alpha > 0) {
+                if (Config.DisableCamera.get()) mc.mouseHelper.ungrabMouse();
                 int scaledHeight = mc.getMainWindow().getScaledHeight();
                 int scaledWidth = mc.getMainWindow().getScaledWidth();
 
@@ -54,6 +56,7 @@ public class GameRendererMixin {
 
                 timePassed += mc.getRenderPartialTicks();
             } else {
+                mc.mouseHelper.grabMouse();
                 timePassed = 0;
                 ScreenshotLoader.resetState();
             }

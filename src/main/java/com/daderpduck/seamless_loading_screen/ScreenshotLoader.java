@@ -36,14 +36,17 @@ public class ScreenshotLoader {
         loaded = false;
         filePath = new File(Minecraft.getInstance().gameDir, screenshotPath);
 
-        try (InputStream in = new FileInputStream(filePath)) {
-            if (!filePath.exists()) return;
-            NativeImage image = NativeImage.read(in);
-            imageRatio = (float) image.getWidth()/image.getHeight();
-            Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
-            loaded = true;
-        } catch (IOException | SecurityException e) {
-            SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
+        if (filePath.exists()) {
+            try (InputStream in = new FileInputStream(filePath)) {
+                NativeImage image = NativeImage.read(in);
+                imageRatio = (float) image.getWidth()/image.getHeight();
+                Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
+                loaded = true;
+            } catch (IOException e) {
+                SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
+            }
+        } else {
+            SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist: " + filePath.getPath());
         }
     }
 

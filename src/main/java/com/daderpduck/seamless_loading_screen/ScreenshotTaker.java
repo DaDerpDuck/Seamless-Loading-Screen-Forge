@@ -67,10 +67,14 @@ public class ScreenshotTaker extends Screen {
         Minecraft mc = this.minecraft;
         if (mc == null) return;
 
-        try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
-            screenshotImage.write(ScreenshotLoader.getCurrentScreenshotPath());
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (ScreenshotLoader.getCurrentScreenshotPath() != null) {
+            try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
+                screenshotImage.write(ScreenshotLoader.getCurrentScreenshotPath());
+            } catch (IOException e) {
+                SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
+            }
+        } else {
+            SeamlessLoadingScreen.LOGGER.error("Screenshot path is null!");
         }
 
         mc.gameSettings.hideGUI = hideGUI;

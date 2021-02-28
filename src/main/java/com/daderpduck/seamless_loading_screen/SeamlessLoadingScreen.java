@@ -40,7 +40,7 @@ public class SeamlessLoadingScreen
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/singleplayer"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/servers"));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Failed to create screenshot directories", e);
         }
     }
 }

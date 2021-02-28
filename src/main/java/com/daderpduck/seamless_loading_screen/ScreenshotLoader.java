@@ -43,7 +43,7 @@ public class ScreenshotLoader {
             Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
             loaded = true;
         } catch (IOException | SecurityException e) {
-            e.printStackTrace();
+            SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
         }
     }
 

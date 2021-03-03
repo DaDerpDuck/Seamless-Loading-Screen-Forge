@@ -43,7 +43,9 @@ public class GameRendererMixin {
 
                 RenderSystem.enableBlend();
                 RenderSystem.defaultBlendFunc();
+                RenderSystem.disableAlphaTest();
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, (int)(alpha*255));
+                RenderSystem.enableAlphaTest();
                 RenderSystem.disableBlend();
 
                 if (ScreenshotRenderer.Fader.isHolding() && mc.currentScreen == null)

@@ -1,5 +1,6 @@
 package com.daderpduck.seamless_loading_screen;
 
+import com.daderpduck.seamless_loading_screen.config.Config;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
@@ -39,6 +40,29 @@ public class ScreenshotRenderer {
         bufferbuilder.pos(screenWidth, 0, 0).color(255, 255, 255, alpha).tex(1F - offset/2, 0).endVertex();
         bufferbuilder.pos(0, 0, 0).color(255, 255, 255, alpha).tex(offset/2, 0.0F).endVertex();
         tessellator.draw();
+    }
+
+    public static class Fader {
+        private static float elapsedTime = 0;
+
+        public static void tick(float partialTicks) {
+            elapsedTime += partialTicks;
+        }
+
+        public static float getAlpha() {
+            float fadeTime = Config.FadeTime.get();
+            float holdTime = Config.HoldTime.get();
+
+            return Math.min(1F - (elapsedTime - holdTime)/fadeTime, 1F);
+        }
+
+        public static boolean isHolding() {
+            return elapsedTime <= Config.HoldTime.get();
+        }
+
+        public static void reset() {
+            elapsedTime = 0;
+        }
     }
 }
 

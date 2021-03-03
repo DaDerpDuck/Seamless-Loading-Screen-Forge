@@ -25,8 +25,6 @@ public class GameRendererMixin {
     private Minecraft mc;
     private MatrixStack matrixStack;
 
-    private static float timePassed = 0;
-
     @Redirect(method = "updateCameraAndRender(FJZ)V", at = @At(value = "NEW", target = "com/mojang/blaze3d/matrix/MatrixStack"))
     private MatrixStack getMatrixStack() {
         matrixStack = new MatrixStack();
@@ -36,10 +34,7 @@ public class GameRendererMixin {
     @Inject(method = "updateCameraAndRender(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/profiler/IProfiler;endSection()V"))
     private void doFade(float partialTicks, long nanoTime, boolean renderWorldIn, CallbackInfo ci) {
         if (ScreenshotLoader.isLoaded()) {
-            float fadeTime = Config.FadeTime.get();
-            float holdTime = Config.HoldTime.get();
-
-            float alpha = Math.min(1F - (timePassed - holdTime)/fadeTime, 1F);
+            float alpha = ScreenshotRenderer.Fader.getAlpha();
 
             if (alpha > 0) {
                 if (Config.DisableCamera.get()) mc.mouseHelper.ungrabMouse();
@@ -51,13 +46,13 @@ public class GameRendererMixin {
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, (int)(alpha*255));
                 RenderSystem.disableBlend();
 
-                if (timePassed < holdTime && mc.currentScreen == null)
+                if (ScreenshotRenderer.Fader.isHolding() && mc.currentScreen == null)
                     AbstractGui.drawCenteredString(matrixStack, mc.fontRenderer, new TranslationTextComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
 
-                timePassed += mc.getRenderPartialTicks();
+                ScreenshotRenderer.Fader.tick(partialTicks);
             } else {
                 mc.mouseHelper.grabMouse();
-                timePassed = 0;
+                ScreenshotRenderer.Fader.reset();
                 ScreenshotLoader.resetState();
             }
         }

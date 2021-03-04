@@ -16,7 +16,7 @@ apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '1.0'
+version = "${project.mc_version}-${project.mod_version}"
 group = 'com.daderpduck.seamless_loading_screen'
 archivesBaseName = 'seamless_loading_screen'
 
@@ -81,14 +81,14 @@ mixin {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.5-36.0.42'
+    minecraft "net.minecraftforge:forge:${project.forge_version}"
 }
 
 jar {
     manifest {
         attributes([
-            "Specification-Title": "examplemod",
-            "Specification-Vendor": "examplemodsareus",
+            "Specification-Title": "Seamless Loading Screen",
+            "Specification-Vendor": "DaDerpDuck",
             "Specification-Version": "1",
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",

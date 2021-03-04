@@ -49,15 +49,24 @@ public class ScreenshotRenderer {
             elapsedTime += partialTicks;
         }
 
-        public static float getAlpha() {
-            float fadeTime = Config.FadeTime.get();
-            float holdTime = Config.HoldTime.get();
+        public static float getFadeTime() {
+            return Config.FadeTime.get();
+        }
 
-            return Math.min(1F - (elapsedTime - holdTime)/fadeTime, 1F);
+        public static float getHoldTime() {
+            return Config.HoldTime.get();
+        }
+
+        public static float getAlpha() {
+            return Math.min(1F - (elapsedTime - getHoldTime())/getFadeTime(), 1F);
         }
 
         public static boolean isHolding() {
-            return elapsedTime <= Config.HoldTime.get();
+            return elapsedTime <= getHoldTime();
+        }
+
+        public static boolean isFading() {
+            return elapsedTime != 0 && elapsedTime < getFadeTime() + getHoldTime();
         }
 
         public static void reset() {

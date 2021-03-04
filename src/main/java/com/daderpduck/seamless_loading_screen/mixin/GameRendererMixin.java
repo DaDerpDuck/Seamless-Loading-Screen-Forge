@@ -37,7 +37,6 @@ public class GameRendererMixin {
             float alpha = ScreenshotRenderer.Fader.getAlpha();
 
             if (alpha > 0) {
-                if (Config.DisableCamera.get()) mc.mouseHelper.ungrabMouse();
                 int scaledHeight = mc.getMainWindow().getScaledHeight();
                 int scaledWidth = mc.getMainWindow().getScaledWidth();
 
@@ -53,7 +52,6 @@ public class GameRendererMixin {
 
                 ScreenshotRenderer.Fader.tick(partialTicks);
             } else {
-                mc.mouseHelper.grabMouse();
                 ScreenshotRenderer.Fader.reset();
                 ScreenshotLoader.resetState();
             }

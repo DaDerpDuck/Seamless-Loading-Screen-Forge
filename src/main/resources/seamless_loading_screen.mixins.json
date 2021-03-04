@@ -13,7 +13,8 @@
     "WorldLoadProgressScreenMixin",
     "WorkingScreenMixin",
     "IngameMenuScreenMixin",
-    "DeathScreenMixin"
+    "DeathScreenMixin",
+    "MouseHelperMixin"
   ],
   "injectors": {
     "defaultRequire": 1

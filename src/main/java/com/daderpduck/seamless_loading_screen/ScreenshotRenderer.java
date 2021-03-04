@@ -58,7 +58,11 @@ public class ScreenshotRenderer {
         }
 
         public static float getAlpha() {
-            return Math.min(1F - (elapsedTime - getHoldTime())/getFadeTime(), 1F);
+            if (getFadeTime() == 0) {
+                return elapsedTime < getHoldTime() ? 1F : 0F;
+            } else {
+                return Math.min(1F - (elapsedTime - getHoldTime())/getFadeTime(), 1F);
+            }
         }
 
         public static boolean isHolding() {

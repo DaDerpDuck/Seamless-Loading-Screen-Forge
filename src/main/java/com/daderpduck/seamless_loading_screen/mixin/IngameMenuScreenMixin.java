@@ -1,48 +1,50 @@
 package com.daderpduck.seamless_loading_screen.mixin;
 
 import com.daderpduck.seamless_loading_screen.ScreenshotTaker;
-import net.minecraft.client.gui.screen.DirtMessageScreen;
-import net.minecraft.client.gui.screen.IngameMenuScreen;
-import net.minecraft.client.gui.screen.MainMenuScreen;
-import net.minecraft.client.gui.screen.MultiplayerScreen;
+import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.realms.RealmsBridgeScreen;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(IngameMenuScreen.class)
-public class IngameMenuScreenMixin {
-    // Lambda syntax when
-    @Inject(method = "lambda$addButtons$9(Lnet/minecraft/client/gui/widget/button/Button;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;isIntegratedServerRunning()Z"), cancellable = true)
-    private void disconnect(Button button, CallbackInfo ci) {
-        button.active = false;
+public class IngameMenuScreenMixin extends Screen {
 
-        ScreenshotTaker.takeScreenshot(mc -> {
-            if (mc.world == null) return;
+    protected IngameMenuScreenMixin(ITextComponent titleIn) {
+        super(titleIn);
+    }
 
-            boolean flag = mc.isIntegratedServerRunning();
-            boolean flag1 = mc.isConnectedToRealms();
+    @Redirect(method = "addButtons()V", at = @At(value = "NEW", target = "net/minecraft/client/gui/widget/button/Button", ordinal = 7))
+    private Button disconnect(int x, int y, int width, int height, ITextComponent title, Button.IPressable pressedAction) {
+        return new Button(x, y, width, height, title, (button2) -> {
+            assert minecraft != null && minecraft.world != null;
 
-            mc.world.sendQuittingDisconnectingPacket();
-            if (flag) {
-                mc.unloadWorld(new DirtMessageScreen(new TranslationTextComponent("menu.savingLevel")));
-            } else {
-                mc.unloadWorld();
-            }
+            button2.active = false;
+            ScreenshotTaker.takeScreenshot(mc -> {
+                boolean flag = minecraft.isIntegratedServerRunning();
+                boolean flag1 = minecraft.isConnectedToRealms();
+                //button2.active = false;
+                minecraft.world.sendQuittingDisconnectingPacket();
+                if (flag) {
+                    minecraft.unloadWorld(new DirtMessageScreen(new TranslationTextComponent("menu.savingLevel")));
+                } else {
+                    minecraft.unloadWorld();
+                }
 
-            if (flag) {
-                mc.displayGuiScreen(new MainMenuScreen());
-            } else if (flag1) {
-                RealmsBridgeScreen realmsbridgescreen = new RealmsBridgeScreen();
-                realmsbridgescreen.func_231394_a_(new MainMenuScreen());
-            } else {
-                mc.displayGuiScreen(new MultiplayerScreen(new MainMenuScreen()));
-            }
+                if (flag) {
+                    minecraft.displayGuiScreen(new MainMenuScreen());
+                } else if (flag1) {
+                    RealmsBridgeScreen realmsbridgescreen = new RealmsBridgeScreen();
+                    realmsbridgescreen.func_231394_a_(new MainMenuScreen());
+                } else {
+                    minecraft.displayGuiScreen(new MultiplayerScreen(new MainMenuScreen()));
+                }
+            });
         });
-
-        ci.cancel();
     }
 }

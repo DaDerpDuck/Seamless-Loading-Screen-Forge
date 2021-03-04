@@ -70,6 +70,7 @@ public class ScreenshotTaker extends Screen {
         if (ScreenshotLoader.getCurrentScreenshotPath() != null) {
             try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
                 screenshotImage.write(ScreenshotLoader.getCurrentScreenshotPath());
+                SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + ScreenshotLoader.getCurrentScreenshotPath().getPath());
             } catch (IOException e) {
                 SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
             }

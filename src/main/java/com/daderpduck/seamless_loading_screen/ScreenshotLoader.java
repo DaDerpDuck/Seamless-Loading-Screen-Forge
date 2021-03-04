@@ -42,6 +42,7 @@ public class ScreenshotLoader {
                 imageRatio = (float) image.getWidth()/image.getHeight();
                 Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
                 loaded = true;
+                SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at " + filePath.getPath());
             } catch (IOException e) {
                 SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
             }

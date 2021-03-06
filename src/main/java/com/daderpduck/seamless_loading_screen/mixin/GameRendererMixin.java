@@ -2,11 +2,9 @@ package com.daderpduck.seamless_loading_screen.mixin;
 
 import com.daderpduck.seamless_loading_screen.ScreenshotLoader;
 import com.daderpduck.seamless_loading_screen.ScreenshotRenderer;
-import com.daderpduck.seamless_loading_screen.config.Config;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MouseHelper;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.util.text.TranslationTextComponent;

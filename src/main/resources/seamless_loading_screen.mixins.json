@@ -11,10 +11,10 @@
     "GameRendererMixin",
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
-    "WorkingScreenMixin",
     "IngameMenuScreenMixin",
     "DeathScreenMixin",
-    "MouseHelperMixin"
+    "MouseHelperMixin",
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

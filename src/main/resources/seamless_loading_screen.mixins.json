@@ -11,8 +11,6 @@
     "GameRendererMixin",
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
-    "IngameMenuScreenMixin",
-    "DeathScreenMixin",
     "MouseHelperMixin",
     "ScreenMixin"
   ],

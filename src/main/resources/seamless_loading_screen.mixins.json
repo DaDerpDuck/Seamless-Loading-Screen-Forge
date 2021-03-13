@@ -12,7 +12,8 @@
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
     "MouseHelperMixin",
-    "ScreenMixin"
+    "ScreenMixin",
+    "RealmsMainScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

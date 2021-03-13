@@ -8,13 +8,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import java.io.File;
 
 public class Config {
-    public static final ForgeConfigSpec CONFIG;
-    public static final ForgeConfigSpec.ConfigValue<Integer> HoldTime;
-    public static final ForgeConfigSpec.ConfigValue<Integer> FadeTime;
-    public static final ForgeConfigSpec.ConfigValue<Boolean> DisableCamera;
-    public static final ForgeConfigSpec.ConfigValue<ScreenshotResolution> Resolution;
-
-    private static CommentedFileConfig fileConfig;
+    public static final ForgeConfigSpec SPEC;
+    public static final ForgeConfigSpec.IntValue HoldTime;
+    public static final ForgeConfigSpec.IntValue FadeTime;
+    public static final ForgeConfigSpec.BooleanValue DisableCamera;
+    public static final ForgeConfigSpec.EnumValue<ScreenshotResolution> Resolution;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -36,7 +34,7 @@ public class Config {
             .translation("seamless_loading_screen.config.resolution.desc")
             .defineEnum("Resolution", ScreenshotResolution.NORMAL);
 
-        CONFIG = builder.build();
+        SPEC = builder.build();
     }
 
     public enum ScreenshotResolution {
@@ -54,12 +52,21 @@ public class Config {
 
     public static void init(String pathName) {
         SeamlessLoadingScreen.LOGGER.info("Loading config: " + pathName);
-        fileConfig = CommentedFileConfig.builder(new File(pathName)).sync().autosave().writingMode(WritingMode.REPLACE).build();
-        fileConfig.load();
+
+        CommentedFileConfig config = CommentedFileConfig.builder(new File(pathName))
+                .sync()
+                .autoreload()
+                .writingMode(WritingMode.REPLACE)
+                .build();
+        config.load();
+        config.save();
+
+        SPEC.setConfig(config);
+
         SeamlessLoadingScreen.LOGGER.info("Loaded config: " + pathName);
     }
 
     public static void save() {
-        fileConfig.save();
+        SPEC.save();
     }
 }

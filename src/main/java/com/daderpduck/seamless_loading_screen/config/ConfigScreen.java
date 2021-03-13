@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.list.OptionsRowList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.BooleanOption;
 import net.minecraft.client.settings.IteratableOption;
+import net.minecraft.client.settings.SliderPercentageOption;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -27,6 +28,26 @@ public class ConfigScreen extends Screen {
     @Override
     protected void init() {
         optionsRowList = new OptionsRowList(minecraft, width, height, 24, height - 32, 25);
+        optionsRowList.addOption(new SliderPercentageOption(
+                "seamless_loading_screen.config.holdTime.title",
+                0,
+                100,
+                1,
+                gameSettings -> (double) Config.HoldTime.get(),
+                (gameSettings, aDouble) -> Config.HoldTime.set(aDouble.intValue()),
+                (gameSettings, option) -> new StringTextComponent(
+                        I18n.format("seamless_loading_screen.config.holdTime.title") + ": " + option.get(gameSettings))
+        ));
+        optionsRowList.addOption(new SliderPercentageOption(
+                "seamless_loading_screen.config.fadeTime.title",
+                0,
+                100,
+                1,
+                gameSettings -> (double) Config.FadeTime.get(),
+                (gameSettings, aDouble) -> Config.FadeTime.set(aDouble.intValue()),
+                (gameSettings, option) -> new StringTextComponent(
+                        I18n.format("seamless_loading_screen.config.fadeTime.title") + ": " + option.get(gameSettings))
+        ));
         optionsRowList.addOption(new BooleanOption(
                 "seamless_loading_screen.config.disableCamera.title",
                 gameSettings -> Config.DisableCamera.get(),
@@ -56,6 +77,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
+        System.out.println("Save called");
         Config.save();
     }
 

@@ -26,7 +26,7 @@ public class SeamlessLoadingScreen
     public static final Logger LOGGER = LogManager.getLogger();
 
     public SeamlessLoadingScreen() {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 

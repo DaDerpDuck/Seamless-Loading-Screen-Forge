@@ -46,6 +46,7 @@ public class SeamlessLoadingScreen
             String gameDirPath = minecraft.gameDir.getPath();
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/singleplayer"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/servers"));
+            Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/realms"));
         } catch (IOException e) {
             LOGGER.error("Failed to create screenshot directories", e);
         }

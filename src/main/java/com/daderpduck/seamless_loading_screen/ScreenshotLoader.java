@@ -27,9 +27,8 @@ public class ScreenshotLoader {
         setScreenshot("screenshots/worlds/servers/" + address + "_" + port + ".png");
     }
 
-    // TODO: Implement realm screenshot functionality
     public static void setScreenshotRealm(String realmName) {
-        setScreenshot("screenshots/worlds/realms" + realmName + ".png");
+        setScreenshot("screenshots/worlds/realms/" + realmName + ".png");
     }
 
     private static void setScreenshot(String screenshotPath) {

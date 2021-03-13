@@ -35,7 +35,7 @@ public class ScreenshotLoader {
         loaded = false;
         filePath = new File(Minecraft.getInstance().gameDir, screenshotPath);
 
-        if (filePath.exists()) {
+        if (filePath.isFile()) {
             try (InputStream in = new FileInputStream(filePath)) {
                 NativeImage image = NativeImage.read(in);
                 imageRatio = (float) image.getWidth()/image.getHeight();

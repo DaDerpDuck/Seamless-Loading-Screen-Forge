@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,5 +55,15 @@ public class GameRendererMixin {
                 ScreenshotLoader.resetState();
             }
         }
+    }
+
+    @Redirect(method = "createWorldIcon()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/integrated/IntegratedServer;isWorldIconSet()Z"))
+    private boolean updateWorldIcon1(IntegratedServer integratedServer) {
+        return false;
+    }
+
+    @Redirect(method = "updateCameraAndRender(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/integrated/IntegratedServer;isWorldIconSet()Z"))
+    private boolean updateWorldIcon2(IntegratedServer integratedServer) {
+        return false;
     }
 }

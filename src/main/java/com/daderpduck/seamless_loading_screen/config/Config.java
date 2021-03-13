@@ -13,6 +13,7 @@ public class Config {
     public static final ForgeConfigSpec.IntValue FadeTime;
     public static final ForgeConfigSpec.BooleanValue DisableCamera;
     public static final ForgeConfigSpec.EnumValue<ScreenshotResolution> Resolution;
+    public static final ForgeConfigSpec.BooleanValue UpdateWorldIcon;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -33,6 +34,10 @@ public class Config {
             .comment("Screenshot resolution")
             .translation("seamless_loading_screen.config.resolution.desc")
             .defineEnum("Resolution", ScreenshotResolution.NORMAL);
+        UpdateWorldIcon = builder
+            .comment("Updates the world icon periodically")
+            .translation("seamless_loading_screen.config.updateWorldIcon.desc")
+            .define("UpdateWorldIcon", false);
 
         SPEC = builder.build();
     }

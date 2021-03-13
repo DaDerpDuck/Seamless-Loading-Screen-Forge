@@ -7,5 +7,7 @@
   "seamless_loading_screen.config.disableCamera.title": "Disable Camera",
   "seamless_loading_screen.config.disableCamera.desc": "Disables camera movement until fade is complete",
   "seamless_loading_screen.config.resolution.title": "Screenshot Resolution",
-  "seamless_loading_screen.config.resolution.desc": "Screenshot resolution"
+  "seamless_loading_screen.config.resolution.desc": "Screenshot resolution",
+  "seamless_loading_screen.config.updateWorldIcon.title": "Update World Icon",
+  "seamless_loading_screen.config.updateWorldIcon.desc": "Updates the world icon periodically"
 }

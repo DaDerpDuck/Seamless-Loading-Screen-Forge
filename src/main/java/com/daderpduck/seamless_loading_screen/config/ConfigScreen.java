@@ -60,6 +60,11 @@ public class ConfigScreen extends Screen {
                 (gameSettings, iteratableOption) -> new StringTextComponent(
                         I18n.format("seamless_loading_screen.config.resolution.title") + ": " + Config.Resolution.get().name())
         ));
+        optionsRowList.addOption(new BooleanOption(
+                "seamless_loading_screen.config.updateWorldIcon.title",
+                gameSettings -> Config.UpdateWorldIcon.get(),
+                (gameSettings, aBoolean) -> Config.UpdateWorldIcon.set(aBoolean)
+        ));
 
         children.add(optionsRowList);
 

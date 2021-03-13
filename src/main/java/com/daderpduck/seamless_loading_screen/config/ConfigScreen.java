@@ -77,7 +77,6 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        System.out.println("Save called");
         Config.save();
     }
 

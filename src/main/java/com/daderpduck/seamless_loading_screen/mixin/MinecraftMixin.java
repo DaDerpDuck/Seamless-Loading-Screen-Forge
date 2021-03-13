@@ -35,7 +35,6 @@ public abstract class MinecraftMixin {
     private void unloadWorldScreenshot(Screen screenIn, CallbackInfo ci) {
         if (!takenScreenshot && world != null) {
             ScreenshotTaker.takeScreenshot(mc -> {
-                System.out.println("took screenshot!");
                 takenScreenshot = true;
                 unloadWorld(screenIn);
             });

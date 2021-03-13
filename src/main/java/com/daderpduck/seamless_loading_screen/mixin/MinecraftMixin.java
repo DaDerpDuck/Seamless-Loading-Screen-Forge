@@ -40,6 +40,7 @@ public abstract class MinecraftMixin {
                 unloadWorld(screenIn);
             });
             runGameLoop(true);
+            ScreenshotLoader.resetState();
             ci.cancel();
         } else {
             takenScreenshot = false;

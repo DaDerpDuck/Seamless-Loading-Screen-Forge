@@ -38,7 +38,7 @@ public class ScreenshotLoader {
         if (filePath.isFile()) {
             try (InputStream in = new FileInputStream(filePath)) {
                 NativeImage image = NativeImage.read(in);
-                imageRatio = (float) image.getWidth()/image.getHeight();
+                imageRatio = image.getWidth()/ (float) image.getHeight();
                 Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
                 loaded = true;
                 SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at " + filePath.getPath());

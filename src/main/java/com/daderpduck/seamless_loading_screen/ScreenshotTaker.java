@@ -8,10 +8,14 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.text.TranslationTextComponent;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -69,8 +73,15 @@ public class ScreenshotTaker extends Screen {
 
         if (ScreenshotLoader.getCurrentScreenshotPath() != null) {
             try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
-                screenshotImage.write(ScreenshotLoader.getCurrentScreenshotPath());
-                SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + ScreenshotLoader.getCurrentScreenshotPath().getPath());
+                File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
+
+                screenshotImage.write(screenshotPath);
+                SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + screenshotPath.getPath());
+
+                if (Config.ArchiveScreenshots.get()) {
+                    String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
+                    screenshotImage.write(new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png"));
+                }
             } catch (IOException e) {
                 SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
             }

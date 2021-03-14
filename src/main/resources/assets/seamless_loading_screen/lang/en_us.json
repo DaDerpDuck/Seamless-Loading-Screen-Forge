@@ -9,5 +9,7 @@
   "seamless_loading_screen.config.resolution.title": "Screenshot Resolution",
   "seamless_loading_screen.config.resolution.desc": "Screenshot resolution",
   "seamless_loading_screen.config.updateWorldIcon.title": "Update World Icon",
-  "seamless_loading_screen.config.updateWorldIcon.desc": "Updates the world icon periodically"
+  "seamless_loading_screen.config.updateWorldIcon.desc": "Updates the world icon periodically",
+  "seamless_loading_screen.config.archiveScreenshots.title": "Archive Screenshots",
+  "seamless_loading_screen.config.archiveScreenshots.desc": "Archives previous screenshots to the archive folder"
 }

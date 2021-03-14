@@ -14,6 +14,7 @@ public class Config {
     public static final ForgeConfigSpec.BooleanValue DisableCamera;
     public static final ForgeConfigSpec.EnumValue<ScreenshotResolution> Resolution;
     public static final ForgeConfigSpec.BooleanValue UpdateWorldIcon;
+    public static final ForgeConfigSpec.BooleanValue ArchiveScreenshots;
 
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
@@ -38,6 +39,11 @@ public class Config {
             .comment("Updates the world icon periodically")
             .translation("seamless_loading_screen.config.updateWorldIcon.desc")
             .define("UpdateWorldIcon", false);
+        ArchiveScreenshots = builder
+            .comment("Archives previous screenshots to the archive folder")
+            .translation("seamless_loading_screen.config.archiveScreenshots.desc")
+            .define("ArchiveScreenshots", false);
+
 
         SPEC = builder.build();
     }

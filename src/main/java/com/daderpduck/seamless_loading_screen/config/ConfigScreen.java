@@ -65,6 +65,11 @@ public class ConfigScreen extends Screen {
                 gameSettings -> Config.UpdateWorldIcon.get(),
                 (gameSettings, aBoolean) -> Config.UpdateWorldIcon.set(aBoolean)
         ));
+        optionsRowList.addOption(new BooleanOption(
+                "seamless_loading_screen.config.archiveScreenshots.title",
+                gameSettings -> Config.ArchiveScreenshots.get(),
+                (gameSettings, aBoolean) -> Config.ArchiveScreenshots.set(aBoolean)
+        ));
 
         children.add(optionsRowList);
 

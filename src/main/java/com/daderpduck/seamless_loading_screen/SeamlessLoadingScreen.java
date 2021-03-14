@@ -47,6 +47,7 @@ public class SeamlessLoadingScreen
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/singleplayer"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/servers"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/realms"));
+            Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/archive"));
         } catch (IOException e) {
             LOGGER.error("Failed to create screenshot directories", e);
         }

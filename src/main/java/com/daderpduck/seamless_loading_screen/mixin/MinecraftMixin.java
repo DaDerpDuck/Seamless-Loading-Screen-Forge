@@ -29,6 +29,7 @@ public abstract class MinecraftMixin {
     @Inject(method = "createWorld(Ljava/lang/String;Lnet/minecraft/world/WorldSettings;Lnet/minecraft/util/registry/DynamicRegistries$Impl;Lnet/minecraft/world/gen/settings/DimensionGeneratorSettings;)V", at = @At("HEAD"))
     private void createWorld(String worldName, WorldSettings worldSettings, DynamicRegistries.Impl dynamicRegistriesIn, DimensionGeneratorSettings dimensionGeneratorSettings, CallbackInfo ci) {
         ScreenshotLoader.setScreenshotWorld(worldName);
+        ScreenshotTaker.shouldSaveScreenshot(true);
     }
 
     @Inject(method = "unloadWorld(Lnet/minecraft/client/gui/screen/Screen;)V", at = @At("HEAD"), cancellable = true)

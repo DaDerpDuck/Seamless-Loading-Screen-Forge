@@ -1,6 +1,7 @@
 package com.daderpduck.seamless_loading_screen.mixin;
 
 import com.daderpduck.seamless_loading_screen.ScreenshotLoader;
+import com.daderpduck.seamless_loading_screen.ScreenshotTaker;
 import net.minecraft.client.gui.screen.WorldSelectionList;
 import net.minecraft.world.storage.WorldSummary;
 import org.spongepowered.asm.mixin.Final;
@@ -19,5 +20,6 @@ public class WorldSelectionListMixin {
     @Inject(method = "func_214443_e()V", at = @At("HEAD"))
     private void play(CallbackInfo ci) {
         ScreenshotLoader.setScreenshotWorld(field_214451_d.getFileName());
+        ScreenshotTaker.shouldSaveScreenshot(true);
     }
 }

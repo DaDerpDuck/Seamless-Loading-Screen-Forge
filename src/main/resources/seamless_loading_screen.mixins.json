@@ -14,6 +14,7 @@
     "MouseHelperMixin",
     "ScreenMixin",
     "RealmsMainScreenMixin",
+    "RealmsGenericErrorScreenMixin",
     "DisconnectedScreenMixin",
     "custom_screenshots.ServerDataMixin",
     "custom_screenshots.AddServerScreenMixin",

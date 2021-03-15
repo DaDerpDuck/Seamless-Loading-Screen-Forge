@@ -25,6 +25,7 @@ import java.util.function.Consumer;
  */
 public class ScreenshotTaker extends Screen {
     private static boolean takingScreenshot = false;
+    private static boolean saveScreenshot = true;
     private static boolean hideGUI;
     private static double chatScale;
     private static final List<Consumer<Minecraft>> consumers = new ArrayList<>();
@@ -54,6 +55,10 @@ public class ScreenshotTaker extends Screen {
         takeScreenshot();
     }
 
+    public static void shouldSaveScreenshot(boolean b) {
+        saveScreenshot = b;
+    }
+
     private static void resizeScreen(Minecraft mc, int width, int height) {
         @SuppressWarnings("ConstantConditions")
         WindowAccessor windowAccessor = (WindowAccessor) (Object) mc.getMainWindow();
@@ -71,23 +76,7 @@ public class ScreenshotTaker extends Screen {
         Minecraft mc = this.minecraft;
         if (mc == null) return;
 
-        if (ScreenshotLoader.getCurrentScreenshotPath() != null) {
-            try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
-                File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
-
-                screenshotImage.write(screenshotPath);
-                SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + screenshotPath.getPath());
-
-                if (Config.ArchiveScreenshots.get()) {
-                    String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
-                    screenshotImage.write(new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png"));
-                }
-            } catch (IOException e) {
-                SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
-            }
-        } else {
-            SeamlessLoadingScreen.LOGGER.error("Screenshot path is null!");
-        }
+        writeScreenshot();
 
         mc.gameSettings.hideGUI = hideGUI;
         mc.gameSettings.chatScale = chatScale;
@@ -98,5 +87,30 @@ public class ScreenshotTaker extends Screen {
             consumer.accept(mc);
         }
         consumers.clear();
+    }
+
+    private void writeScreenshot() {
+        if (!saveScreenshot) return;
+        if (ScreenshotLoader.getCurrentScreenshotPath() == null) {
+            SeamlessLoadingScreen.LOGGER.error("Screenshot path is null!");
+            return;
+        }
+
+        Minecraft mc = this.minecraft;
+        if (mc == null) return;
+
+        try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
+            File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
+
+            screenshotImage.write(screenshotPath);
+            SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + screenshotPath.getPath());
+
+            if (Config.ArchiveScreenshots.get()) {
+                String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
+                screenshotImage.write(new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png"));
+            }
+        } catch (IOException e) {
+            SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
+        }
     }
 }

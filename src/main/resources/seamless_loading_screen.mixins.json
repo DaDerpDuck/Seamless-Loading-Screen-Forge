@@ -13,7 +13,10 @@
     "WorldLoadProgressScreenMixin",
     "MouseHelperMixin",
     "ScreenMixin",
-    "RealmsMainScreenMixin"
+    "RealmsMainScreenMixin",
+    "custom_screenshots.ServerDataMixin",
+    "custom_screenshots.AddServerScreenMixin",
+    "custom_screenshots.MultiplayerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

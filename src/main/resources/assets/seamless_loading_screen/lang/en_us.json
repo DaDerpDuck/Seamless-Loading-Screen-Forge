@@ -11,5 +11,6 @@
   "seamless_loading_screen.config.updateWorldIcon.title": "Update World Icon",
   "seamless_loading_screen.config.updateWorldIcon.desc": "Updates the world icon periodically",
   "seamless_loading_screen.config.archiveScreenshots.title": "Archive Screenshots",
-  "seamless_loading_screen.config.archiveScreenshots.desc": "Archives previous screenshots to the archive folder"
+  "seamless_loading_screen.config.archiveScreenshots.desc": "Archives previous screenshots to the archive folder",
+  "seamless_loading_screen.server.allowCustomScreenshot": "Use Custom Screenshot"
 }

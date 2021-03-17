@@ -4,11 +4,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SharedConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 /**
  * Holds where screenshots are loaded/saved
@@ -18,6 +20,7 @@ public class ScreenshotLoader {
     private static float imageRatio = 1;
     private static boolean loaded = false;
     private static File filePath;
+    private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
 
     public static void setScreenshotWorld(String worldName) {
         setScreenshot("screenshots/worlds/singleplayer/" + worldName + ".png");
@@ -28,7 +31,7 @@ public class ScreenshotLoader {
     }
 
     public static void setScreenshotRealm(String realmName) {
-        setScreenshot("screenshots/worlds/realms/" + realmName + ".png");
+        setScreenshot("screenshots/worlds/realms/" + cleanFileName(realmName) + ".png");
     }
 
     private static void setScreenshot(String screenshotPath) {
@@ -48,6 +51,23 @@ public class ScreenshotLoader {
         } else {
             SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist: " + filePath.getPath());
         }
+    }
+
+    private static String cleanFileName(String fileName) {
+        for (char c : SharedConstants.ILLEGAL_FILE_CHARACTERS) {
+            fileName = fileName.replace(c, '_');
+        }
+
+        fileName = fileName.replaceAll("[./\"]", "_");
+        if (RESERVED_FILENAMES_PATTERN.matcher(fileName).matches()) {
+            fileName = "_" + fileName + "_";
+        }
+
+        if (fileName.length() > 255 - 4) {
+            fileName = fileName.substring(0, 255 - 4);
+        }
+
+        return fileName;
     }
 
     public static float getImageRatio() {

@@ -8,6 +8,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nonnull;
@@ -27,11 +29,12 @@ public class ScreenshotTaker extends Screen {
     private static boolean takingScreenshot = false;
     private static boolean saveScreenshot = true;
     private static boolean hideGUI;
-    private static double chatScale;
     private static final List<Consumer<Minecraft>> consumers = new ArrayList<>();
+    private final Consumer<RenderGameOverlayEvent.Pre> cancelOverlayListener = this::cancelGuiOverlay;
 
     protected ScreenshotTaker() {
         super(new TranslationTextComponent("connect.joining"));
+        MinecraftForge.EVENT_BUS.addListener(cancelOverlayListener);
     }
 
     public static void takeScreenshot() {
@@ -40,10 +43,8 @@ public class ScreenshotTaker extends Screen {
         if (!takingScreenshot && mc.world != null) {
             takingScreenshot = true;
             hideGUI = mc.gameSettings.hideGUI;
-            chatScale = mc.gameSettings.chatScale;
 
             mc.gameSettings.hideGUI = true;
-            mc.gameSettings.chatScale = 0;
             Config.ScreenshotResolution resolution = Config.Resolution.get();
             resizeScreen(mc, resolution.width, resolution.height);
             mc.displayGuiScreen(new ScreenshotTaker());
@@ -79,9 +80,9 @@ public class ScreenshotTaker extends Screen {
         writeScreenshot();
 
         mc.gameSettings.hideGUI = hideGUI;
-        mc.gameSettings.chatScale = chatScale;
         takingScreenshot = false;
         resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
+        MinecraftForge.EVENT_BUS.unregister(cancelOverlayListener);
 
         for (Consumer<Minecraft> consumer : consumers) {
             consumer.accept(mc);
@@ -112,5 +113,9 @@ public class ScreenshotTaker extends Screen {
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
         }
+    }
+
+    private void cancelGuiOverlay(RenderGameOverlayEvent.Pre event) {
+        if (takingScreenshot) event.setCanceled(true);
     }
 }

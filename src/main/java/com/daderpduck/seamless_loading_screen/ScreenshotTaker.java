@@ -16,6 +16,8 @@ import org.apache.commons.io.FilenameUtils;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,8 +106,13 @@ public class ScreenshotTaker extends Screen {
 
         try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
             File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
+            File tempFile = File.createTempFile("slsscreenshot", ".png");
+            tempFile.deleteOnExit();
+            screenshotImage.write(tempFile);
+            screenshotImage.close();
+            Files.move(tempFile.toPath(), screenshotPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.deleteIfExists(tempFile.toPath());
 
-            screenshotImage.write(screenshotPath);
             SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + screenshotPath.getPath());
 
             if (Config.ArchiveScreenshots.get()) {

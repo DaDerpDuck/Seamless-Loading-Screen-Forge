@@ -39,6 +39,7 @@ public class ScreenshotTaker extends Screen {
     }
 
     public static void takeScreenshot() {
+        SeamlessLoadingScreen.LOGGER.info("takeScreenshot called, takingScreenshot was " + takingScreenshot + ", saveScreenshot was " + saveScreenshot);
         Minecraft mc = Minecraft.getInstance();
 
         if (!takingScreenshot && mc.world != null) {
@@ -109,7 +110,9 @@ public class ScreenshotTaker extends Screen {
 
             if (Config.ArchiveScreenshots.get()) {
                 String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
-                screenshotImage.write(new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png"));
+                File archivePath = new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
+                screenshotImage.write(archivePath);
+                SeamlessLoadingScreen.LOGGER.info("Archived screenshot at " + archivePath.getPath());
             }
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);

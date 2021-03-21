@@ -1,12 +1,14 @@
 modLoader="javafml"
 loaderVersion="${loader_range}"
 license="MIT"
+issueTrackerURL="https://github.com/DaDerpDuck/Seamless-Loading-Screen-Forge/issues"
 
 [[mods]]
 modId="seamless_loading_screen"
 version="${file.jarVersion}"
 displayName="Seamless Loading Screen"
-authors="Minenash, Forge Port: DaDerpDuck"
+authors="Minenash, DaDerpDuck"
+credits="Minenash, Forge Port: DaDerpDuck"
 description='''
 Forge port of Seamless Loading Screen
 Takes a screenshot of the game when you leave a world or server, and displays it when you rejoin it

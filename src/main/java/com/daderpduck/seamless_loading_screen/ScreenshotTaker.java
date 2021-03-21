@@ -10,6 +10,7 @@ import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.EventPriority;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nonnull;
@@ -34,7 +35,7 @@ public class ScreenshotTaker extends Screen {
 
     protected ScreenshotTaker() {
         super(new TranslationTextComponent("connect.joining"));
-        MinecraftForge.EVENT_BUS.addListener(cancelOverlayListener);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, cancelOverlayListener);
     }
 
     public static void takeScreenshot() {

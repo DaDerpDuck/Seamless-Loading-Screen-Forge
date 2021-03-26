@@ -2,6 +2,7 @@ package com.daderpduck.seamless_loading_screen.mixin;
 
 import com.daderpduck.seamless_loading_screen.ScreenshotLoader;
 import com.daderpduck.seamless_loading_screen.ScreenshotRenderer;
+import com.daderpduck.seamless_loading_screen.config.Config;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -59,11 +60,11 @@ public class GameRendererMixin {
 
     @Redirect(method = "createWorldIcon()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/integrated/IntegratedServer;isWorldIconSet()Z"))
     private boolean updateWorldIcon1(IntegratedServer integratedServer) {
-        return false;
+        return !Config.UpdateWorldIcon.get();
     }
 
     @Redirect(method = "updateCameraAndRender(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/integrated/IntegratedServer;isWorldIconSet()Z"))
     private boolean updateWorldIcon2(IntegratedServer integratedServer) {
-        return false;
+        return !Config.UpdateWorldIcon.get();
     }
 }

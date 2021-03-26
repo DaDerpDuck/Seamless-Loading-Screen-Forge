@@ -16,6 +16,7 @@
     "RealmsMainScreenMixin",
     "RealmsGenericErrorScreenMixin",
     "DisconnectedScreenMixin",
+    "SaveFormatMixin",
     "custom_screenshots.ServerDataMixin",
     "custom_screenshots.AddServerScreenMixin",
     "custom_screenshots.MultiplayerScreenMixin"

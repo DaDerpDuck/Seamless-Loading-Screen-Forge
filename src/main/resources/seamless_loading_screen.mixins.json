@@ -5,7 +5,6 @@
   "refmap": "seamless_loading_screen.refmap.json",
   "package": "com.daderpduck.seamless_loading_screen.mixin",
   "client": [
-    "ConnectingScreenMixin",
     "MinecraftMixin",
     "WindowAccessor",
     "GameRendererMixin",
@@ -14,8 +13,6 @@
     "MouseHelperMixin",
     "ScreenMixin",
     "RealmsMainScreenMixin",
-    "RealmsGenericErrorScreenMixin",
-    "DisconnectedScreenMixin",
     "SaveFormatMixin",
     "custom_screenshots.ServerDataMixin",
     "custom_screenshots.AddServerScreenMixin",

@@ -62,7 +62,7 @@ public class Config {
     }
 
     public static void init(String pathName) {
-        SeamlessLoadingScreen.LOGGER.info("Loading config: " + pathName);
+        SeamlessLoadingScreen.LOGGER.debug("Loading config: {}", pathName);
 
         CommentedFileConfig config = CommentedFileConfig.builder(new File(pathName))
                 .sync()
@@ -74,7 +74,7 @@ public class Config {
 
         SPEC.setConfig(config);
 
-        SeamlessLoadingScreen.LOGGER.info("Loaded config: " + pathName);
+        SeamlessLoadingScreen.LOGGER.debug("Loaded config: {}", pathName);
     }
 
     public static void save() {

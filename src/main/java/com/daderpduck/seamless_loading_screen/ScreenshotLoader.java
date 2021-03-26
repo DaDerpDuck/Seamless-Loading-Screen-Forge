@@ -44,12 +44,12 @@ public class ScreenshotLoader {
                 imageRatio = image.getWidth()/ (float) image.getHeight();
                 Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
                 loaded = true;
-                SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at " + filePath.getPath());
+                SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at {}", filePath.getPath());
             } catch (IOException e) {
                 SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
             }
         } else {
-            SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist: " + filePath.getPath());
+            SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist or is not a file {}", filePath.getPath());
         }
     }
 

@@ -41,7 +41,7 @@ public class ScreenshotTaker extends Screen {
     }
 
     public static void takeScreenshot() {
-        SeamlessLoadingScreen.LOGGER.info("takeScreenshot called, takingScreenshot was " + takingScreenshot + ", saveScreenshot was " + saveScreenshot);
+        SeamlessLoadingScreen.LOGGER.info("Taking screenshot (takingScreenshot: {}, saveScreenshot: {})", takingScreenshot, saveScreenshot);
         Minecraft mc = Minecraft.getInstance();
 
         if (!takingScreenshot && mc.world != null) {
@@ -106,6 +106,8 @@ public class ScreenshotTaker extends Screen {
 
         try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
             File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
+            SeamlessLoadingScreen.LOGGER.info("Saving screenshot at {}", screenshotPath.getPath());
+
             File tempFile = File.createTempFile("slsscreenshot", ".png");
             tempFile.deleteOnExit();
             screenshotImage.write(tempFile);
@@ -113,13 +115,11 @@ public class ScreenshotTaker extends Screen {
             Files.move(tempFile.toPath(), screenshotPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.deleteIfExists(tempFile.toPath());
 
-            SeamlessLoadingScreen.LOGGER.info("Saved screenshot at " + screenshotPath.getPath());
-
             if (Config.ArchiveScreenshots.get()) {
                 String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
                 File archivePath = new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
+                SeamlessLoadingScreen.LOGGER.info("Archived screenshot at {}", archivePath.getPath());
                 screenshotImage.write(archivePath);
-                SeamlessLoadingScreen.LOGGER.info("Archived screenshot at " + archivePath.getPath());
             }
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);

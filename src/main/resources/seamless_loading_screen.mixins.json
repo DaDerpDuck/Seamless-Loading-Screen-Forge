@@ -11,7 +11,6 @@
     "WorldSelectionListMixin",
     "WorldLoadProgressScreenMixin",
     "MouseHelperMixin",
-    "ScreenMixin",
     "RealmsMainScreenMixin",
     "SaveFormatMixin",
     "custom_screenshots.ServerDataMixin",

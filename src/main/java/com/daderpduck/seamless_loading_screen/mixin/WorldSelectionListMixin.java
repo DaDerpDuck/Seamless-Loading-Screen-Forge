@@ -1,9 +1,9 @@
 package com.daderpduck.seamless_loading_screen.mixin;
 
-import com.daderpduck.seamless_loading_screen.ScreenshotLoader;
-import com.daderpduck.seamless_loading_screen.ScreenshotTaker;
+import com.daderpduck.seamless_loading_screen.events.PreLoadWorldEvent;
 import net.minecraft.client.gui.screen.WorldSelectionList;
 import net.minecraft.world.storage.WorldSummary;
+import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,6 @@ public class WorldSelectionListMixin {
 
     @Inject(method = "func_214443_e()V", at = @At("HEAD"))
     private void play(CallbackInfo ci) {
-        ScreenshotLoader.setScreenshotWorld(field_214451_d.getFileName());
-        ScreenshotTaker.shouldSaveScreenshot(true);
+        MinecraftForge.EVENT_BUS.post(new PreLoadWorldEvent(field_214451_d.getFileName()));
     }
 }

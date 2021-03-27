@@ -8,6 +8,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+
+/**
+ * Gives the chunk colormap a transparent black background
+ */
 @Mixin(WorldLoadProgressScreen.class)
 public class WorldLoadProgressScreenMixin extends Screen {
     protected WorldLoadProgressScreenMixin(ITextComponent titleIn) {

@@ -2,17 +2,22 @@ package com.daderpduck.seamless_loading_screen.config;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.IBidiTooltip;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.list.OptionsRowList;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.BooleanOption;
 import net.minecraft.client.settings.IteratableOption;
 import net.minecraft.client.settings.SliderPercentageOption;
+import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 
 public class ConfigScreen extends Screen {
     private final Minecraft minecraft;
@@ -57,8 +62,15 @@ public class ConfigScreen extends Screen {
                 "seamless_loading_screen.config.resolution.title",
                 (gameSettings, integer) -> Config.Resolution.set(
                         Config.ScreenshotResolution.values()[ (Config.Resolution.get().ordinal() + integer)%Config.ScreenshotResolution.values().length ]),
-                (gameSettings, iteratableOption) -> new StringTextComponent(
-                        I18n.format("seamless_loading_screen.config.resolution.title") + ": " + Config.Resolution.get().name())
+                (gameSettings, iteratableOption) -> {
+                    iteratableOption.setOptionValues(
+                            Minecraft.getInstance().fontRenderer.trimStringToWidth(
+                                    new TranslationTextComponent("seamless_loading_screen.config.resolution.tooltip" + Config.Resolution.get().ordinal()),
+                                    200));
+
+                    return new StringTextComponent(
+                            I18n.format("seamless_loading_screen.config.resolution.title") + ": " + Config.Resolution.get().name());
+                }
         ));
         optionsRowList.addOption(new BooleanOption(
                 "seamless_loading_screen.config.updateWorldIcon.title",
@@ -82,6 +94,16 @@ public class ConfigScreen extends Screen {
         renderBackground(matrixStack);
         optionsRowList.render(matrixStack, mouseX, mouseY, partialTicks);
         drawCenteredString(matrixStack, font, title, width/2, 8, 0xFFFFFF);
+
+        Optional<Widget> optional = optionsRowList.func_238518_c_(mouseX, mouseY);
+        if (optional.isPresent() && optional.get() instanceof IBidiTooltip) {
+            Optional<List<IReorderingProcessor>> optional1 = ((IBidiTooltip)optional.get()).func_241867_d();
+            List<IReorderingProcessor> list = optional1.orElse(null);
+            if (list != null) {
+                renderToolTip(matrixStack, list, mouseX, mouseY, minecraft.fontRenderer);
+            }
+        }
+
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 

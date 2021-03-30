@@ -21,15 +21,15 @@ public class Config {
 
         HoldTime = builder
             .comment("Delay before fade for chunks to load")
-            .translation("seamless_loading_screen.config.holdTime.desc")
+            .translation("seamless_loading_screen.config.hold_time.desc")
             .defineInRange("HoldTime", 80, 0, Integer.MAX_VALUE);
         FadeTime = builder
             .comment("Fade duration")
-            .translation("seamless_loading_screen.config.fadeTime.desc")
+            .translation("seamless_loading_screen.config.fade_time.desc")
             .defineInRange("FadeTime", 20, 0, Integer.MAX_VALUE);
         DisableCamera = builder
             .comment("Disables camera movement until fade is complete")
-            .translation("seamless_loading_screen.config.disableCamera.desc")
+            .translation("seamless_loading_screen.config.disable_camera.desc")
             .define("DisableCamera", true);
         Resolution = builder
             .comment("Screenshot resolution")
@@ -37,11 +37,11 @@ public class Config {
             .defineEnum("Resolution", ScreenshotResolution.NORMAL);
         UpdateWorldIcon = builder
             .comment("Updates the world icon periodically")
-            .translation("seamless_loading_screen.config.updateWorldIcon.desc")
+            .translation("seamless_loading_screen.config.update_world_icon.desc")
             .define("UpdateWorldIcon", false);
         ArchiveScreenshots = builder
             .comment("Archives previous screenshots to the archive folder")
-            .translation("seamless_loading_screen.config.archiveScreenshots.desc")
+            .translation("seamless_loading_screen.config.archive_screenshots.desc")
             .define("ArchiveScreenshots", false);
 
 

@@ -49,7 +49,7 @@ public class AddServerScreenMixin extends Screen {
     @Unique
     private ITextComponent getText() {
         return DialogTexts.getComposedOptionMessage(
-                new TranslationTextComponent("seamless_loading_screen.server.allowCustomScreenshot"),
+                new TranslationTextComponent("seamless_loading_screen.server.allow_custom_screenshot"),
                 ((ServerDataExtras) serverData).getAllowCustomScreenshot()
         );
     }

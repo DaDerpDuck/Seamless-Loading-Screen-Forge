@@ -34,7 +34,7 @@ public class ConfigScreen extends Screen {
     protected void init() {
         optionsRowList = new OptionsRowList(minecraft, width, height, 24, height - 32, 25);
         optionsRowList.addOption(new SliderPercentageOption(
-                "seamless_loading_screen.config.holdTime.title",
+                "seamless_loading_screen.config.hold_time.title",
                 0,
                 100,
                 1,
@@ -42,25 +42,25 @@ public class ConfigScreen extends Screen {
                 (gameSettings, aDouble) -> Config.HoldTime.set(aDouble.intValue()),
                 (gameSettings, option) -> {
                     option.setOptionValues(minecraft.fontRenderer.trimStringToWidth(
-                            new TranslationTextComponent("seamless_loading_screen.config.holdTime.tooltip"),
+                            new TranslationTextComponent("seamless_loading_screen.config.hold_time.tooltip"),
                             200));
 
                     return new StringTextComponent(
-                            I18n.format("seamless_loading_screen.config.holdTime.title") + ": " + option.get(gameSettings));
+                            I18n.format("seamless_loading_screen.config.hold_time.title") + ": " + option.get(gameSettings));
                 }
         ));
         optionsRowList.addOption(new SliderPercentageOption(
-                "seamless_loading_screen.config.fadeTime.title",
+                "seamless_loading_screen.config.fade_time.title",
                 0,
                 100,
                 1,
                 gameSettings -> (double) Config.FadeTime.get(),
                 (gameSettings, aDouble) -> Config.FadeTime.set(aDouble.intValue()),
                 (gameSettings, option) -> new StringTextComponent(
-                        I18n.format("seamless_loading_screen.config.fadeTime.title") + ": " + option.get(gameSettings))
+                        I18n.format("seamless_loading_screen.config.fade_time.title") + ": " + option.get(gameSettings))
         ));
         optionsRowList.addOption(new BooleanOption(
-                "seamless_loading_screen.config.disableCamera.title",
+                "seamless_loading_screen.config.disable_camera.title",
                 gameSettings -> Config.DisableCamera.get(),
                 (gameSettings, aBoolean) -> Config.DisableCamera.set(aBoolean)
         ));
@@ -79,12 +79,12 @@ public class ConfigScreen extends Screen {
                 }
         ));
         optionsRowList.addOption(new BooleanOption(
-                "seamless_loading_screen.config.updateWorldIcon.title",
+                "seamless_loading_screen.config.update_world_icon.title",
                 gameSettings -> Config.UpdateWorldIcon.get(),
                 (gameSettings, aBoolean) -> Config.UpdateWorldIcon.set(aBoolean)
         ));
         optionsRowList.addOption(new BooleanOption(
-                "seamless_loading_screen.config.archiveScreenshots.title",
+                "seamless_loading_screen.config.archive_screenshots.title",
                 gameSettings -> Config.ArchiveScreenshots.get(),
                 (gameSettings, aBoolean) -> Config.ArchiveScreenshots.set(aBoolean)
         ));

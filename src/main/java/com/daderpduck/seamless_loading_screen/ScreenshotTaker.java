@@ -111,7 +111,6 @@ public class ScreenshotTaker extends Screen {
             File tempFile = File.createTempFile("slsscreenshot", ".png");
             tempFile.deleteOnExit();
             screenshotImage.write(tempFile);
-            screenshotImage.close();
             Files.move(tempFile.toPath(), screenshotPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.deleteIfExists(tempFile.toPath());
 

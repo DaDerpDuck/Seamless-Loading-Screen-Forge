@@ -2,6 +2,7 @@
   "seamless_loading_screen.config.title": "Seamless Loading Screen Options",
   "seamless_loading_screen.config.holdTime.title": "Hold Time",
   "seamless_loading_screen.config.holdTime.desc": "Delay before fade for chunks to load",
+  "seamless_loading_screen.config.holdTime.tooltip": "How long to wait before beginning fade, meant for chunks to load in",
   "seamless_loading_screen.config.fadeTime.title": "Fade time",
   "seamless_loading_screen.config.fadeTime.desc": "Fade duration",
   "seamless_loading_screen.config.disableCamera.title": "Disable Camera",

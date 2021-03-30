@@ -40,8 +40,14 @@ public class ConfigScreen extends Screen {
                 1,
                 gameSettings -> (double) Config.HoldTime.get(),
                 (gameSettings, aDouble) -> Config.HoldTime.set(aDouble.intValue()),
-                (gameSettings, option) -> new StringTextComponent(
-                        I18n.format("seamless_loading_screen.config.holdTime.title") + ": " + option.get(gameSettings))
+                (gameSettings, option) -> {
+                    option.setOptionValues(minecraft.fontRenderer.trimStringToWidth(
+                            new TranslationTextComponent("seamless_loading_screen.config.holdTime.tooltip"),
+                            200));
+
+                    return new StringTextComponent(
+                            I18n.format("seamless_loading_screen.config.holdTime.title") + ": " + option.get(gameSettings));
+                }
         ));
         optionsRowList.addOption(new SliderPercentageOption(
                 "seamless_loading_screen.config.fadeTime.title",
@@ -64,7 +70,7 @@ public class ConfigScreen extends Screen {
                         Config.ScreenshotResolution.values()[ (Config.Resolution.get().ordinal() + integer)%Config.ScreenshotResolution.values().length ]),
                 (gameSettings, iteratableOption) -> {
                     iteratableOption.setOptionValues(
-                            Minecraft.getInstance().fontRenderer.trimStringToWidth(
+                            minecraft.fontRenderer.trimStringToWidth(
                                     new TranslationTextComponent("seamless_loading_screen.config.resolution.tooltip" + Config.Resolution.get().ordinal()),
                                     200));
 
@@ -98,10 +104,7 @@ public class ConfigScreen extends Screen {
         Optional<Widget> optional = optionsRowList.func_238518_c_(mouseX, mouseY);
         if (optional.isPresent() && optional.get() instanceof IBidiTooltip) {
             Optional<List<IReorderingProcessor>> optional1 = ((IBidiTooltip)optional.get()).func_241867_d();
-            List<IReorderingProcessor> list = optional1.orElse(null);
-            if (list != null) {
-                renderToolTip(matrixStack, list, mouseX, mouseY, minecraft.fontRenderer);
-            }
+            optional1.ifPresent(list -> renderToolTip(matrixStack, list, mouseX, mouseY, minecraft.fontRenderer));
         }
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);

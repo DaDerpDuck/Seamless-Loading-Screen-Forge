@@ -38,7 +38,7 @@ public class Config {
         UpdateWorldIcon = builder
             .comment("Updates the world icon periodically")
             .translation("seamless_loading_screen.config.update_world_icon.desc")
-            .define("UpdateWorldIcon", false);
+            .define("UpdateWorldIcon", true);
         ArchiveScreenshots = builder
             .comment("Archives previous screenshots to the archive folder")
             .translation("seamless_loading_screen.config.archive_screenshots.desc")

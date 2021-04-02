@@ -60,6 +60,9 @@ public class ScreenshotTaker extends Screen {
         takeScreenshot();
     }
 
+    /**
+     * Sets whether screenshots should be saved on exit - used for custom screenshots
+     */
     public static void shouldSaveScreenshot(boolean b) {
         saveScreenshot = b;
     }

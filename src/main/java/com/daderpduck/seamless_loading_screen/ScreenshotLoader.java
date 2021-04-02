@@ -78,6 +78,9 @@ public class ScreenshotLoader {
         return filePath;
     }
 
+    /**
+     * Indicates whether a screenshot can be rendered
+     */
     public static boolean isLoaded() {
         return loaded;
     }

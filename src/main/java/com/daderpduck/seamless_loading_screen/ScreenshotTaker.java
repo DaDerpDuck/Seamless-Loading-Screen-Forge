@@ -1,6 +1,8 @@
 package com.daderpduck.seamless_loading_screen;
 
 import com.daderpduck.seamless_loading_screen.config.Config;
+import com.daderpduck.seamless_loading_screen.events.OFLagometerEvent;
+import com.daderpduck.seamless_loading_screen.events.OFFpsDrawEvent;
 import com.daderpduck.seamless_loading_screen.mixin.WindowAccessor;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -34,10 +36,14 @@ public class ScreenshotTaker extends Screen {
     private static boolean hideGUI;
     private static final List<Consumer<Minecraft>> consumers = new ArrayList<>();
     private final Consumer<RenderGameOverlayEvent.Pre> cancelOverlayListener = this::cancelGuiOverlay;
+    private final Consumer<OFFpsDrawEvent> drawFpsListener = this::cancelFpsDraw;
+    private final Consumer<OFLagometerEvent> lagometerListener = this::cancelLagometer;
 
     protected ScreenshotTaker() {
         super(new TranslationTextComponent("connect.joining"));
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, cancelOverlayListener);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, drawFpsListener);
+        MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, lagometerListener);
     }
 
     public static void takeScreenshot() {
@@ -90,6 +96,8 @@ public class ScreenshotTaker extends Screen {
         takingScreenshot = false;
         resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
         MinecraftForge.EVENT_BUS.unregister(cancelOverlayListener);
+        MinecraftForge.EVENT_BUS.unregister(drawFpsListener);
+        MinecraftForge.EVENT_BUS.unregister(lagometerListener);
 
         for (Consumer<Minecraft> consumer : consumers) {
             consumer.accept(mc);
@@ -129,6 +137,12 @@ public class ScreenshotTaker extends Screen {
     }
 
     private void cancelGuiOverlay(RenderGameOverlayEvent.Pre event) {
+        if (takingScreenshot) event.setCanceled(true);
+    }
+    private void cancelFpsDraw(OFFpsDrawEvent event) {
+        if (takingScreenshot) event.setCanceled(true);
+    }
+    private void cancelLagometer(OFLagometerEvent event) {
         if (takingScreenshot) event.setCanceled(true);
     }
 }

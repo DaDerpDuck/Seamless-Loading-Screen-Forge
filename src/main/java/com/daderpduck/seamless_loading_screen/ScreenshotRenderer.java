@@ -19,7 +19,7 @@ public class ScreenshotRenderer {
         mc.getTextureManager().bindTexture(ScreenshotLoader.SCREENSHOT);
         bufferbuilder.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
         bufferbuilder.pos(0, screenHeight, 0).color(255, 255, 255, alpha).tex(offset/2, 1F).endVertex();
-        bufferbuilder.pos(screenWidth, screenHeight, 0).color(255, 255, alpha, alpha).tex(1F - offset/2, 1F).endVertex();
+        bufferbuilder.pos(screenWidth, screenHeight, 0).color(255, 255, 255, alpha).tex(1F - offset/2, 1F).endVertex();
         bufferbuilder.pos(screenWidth, 0, 0).color(255, 255, 255, alpha).tex(1F - offset/2, 0).endVertex();
         bufferbuilder.pos(0, 0, 0).color(255, 255, 255, alpha).tex(offset/2, 0.0F).endVertex();
         tessellator.draw();

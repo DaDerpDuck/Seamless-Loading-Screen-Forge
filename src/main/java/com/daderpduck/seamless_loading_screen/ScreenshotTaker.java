@@ -123,13 +123,13 @@ public class ScreenshotTaker extends Screen {
             Path screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
             SeamlessLoadingScreen.LOGGER.info("Saving screenshot at {}", screenshotPath);
 
-            AsynchronousFileChannel channel = AsynchronousFileChannel.open(screenshotPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+            AsynchronousFileChannel channel = AsynchronousFileChannel.open(screenshotPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
             channel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
 
             if (Config.ArchiveScreenshots.get()) {
                 String fileName = FilenameUtils.removeExtension(screenshotPath.getFileName().toString());
                 Path archivePath = Paths.get(Minecraft.getInstance().gameDir.getPath(), "screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
-                AsynchronousFileChannel archiveChannel = AsynchronousFileChannel.open(archivePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                AsynchronousFileChannel archiveChannel = AsynchronousFileChannel.open(archivePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 archiveChannel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
             }
         } catch (IOException e) {
@@ -154,7 +154,8 @@ public class ScreenshotTaker extends Screen {
 
             try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
                 nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
-                nativeimage1.write(mc.getIntegratedServer().getWorldIconFile());
+                AsynchronousFileChannel channel = AsynchronousFileChannel.open(mc.getIntegratedServer().getWorldIconFile().toPath(), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                channel.write(ByteBuffer.wrap(nativeimage1.getBytes()), 0);
             } catch (IOException ioexception) {
                 SeamlessLoadingScreen.LOGGER.warn("Couldn't save auto screenshot", ioexception);
             } finally {

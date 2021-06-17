@@ -16,10 +16,12 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -118,20 +120,17 @@ public class ScreenshotTaker extends Screen {
         if (mc == null) return;
 
         try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
-            File screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
-            SeamlessLoadingScreen.LOGGER.info("Saving screenshot at {}", screenshotPath.getPath());
+            Path screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
+            SeamlessLoadingScreen.LOGGER.info("Saving screenshot at {}", screenshotPath);
 
-            File tempFile = File.createTempFile("slsscreenshot", ".png");
-            tempFile.deleteOnExit();
-            screenshotImage.write(tempFile);
-            Files.move(tempFile.toPath(), screenshotPath.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            Files.deleteIfExists(tempFile.toPath());
+            AsynchronousFileChannel channel = AsynchronousFileChannel.open(screenshotPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+            channel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
 
             if (Config.ArchiveScreenshots.get()) {
-                String fileName = FilenameUtils.removeExtension(screenshotPath.getName());
-                File archivePath = new File("screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
-                SeamlessLoadingScreen.LOGGER.info("Archived screenshot at {}", archivePath.getPath());
-                screenshotImage.write(archivePath);
+                String fileName = FilenameUtils.removeExtension(screenshotPath.getFileName().toString());
+                Path archivePath = Paths.get(Minecraft.getInstance().gameDir.getPath(), "screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
+                AsynchronousFileChannel archiveChannel = AsynchronousFileChannel.open(archivePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                archiveChannel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
             }
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);

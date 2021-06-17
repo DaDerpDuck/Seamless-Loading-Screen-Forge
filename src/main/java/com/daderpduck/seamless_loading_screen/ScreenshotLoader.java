@@ -6,10 +6,12 @@ import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SharedConstants;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 /**
@@ -19,7 +21,7 @@ public class ScreenshotLoader {
     public static final ResourceLocation SCREENSHOT = new ResourceLocation(SeamlessLoadingScreen.MOD_ID, "screenshot");
     private static float imageRatio = 1;
     private static boolean loaded = false;
-    private static File filePath;
+    private static Path filePath;
     private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
 
     public static void setScreenshotWorld(String worldName) {
@@ -36,20 +38,20 @@ public class ScreenshotLoader {
 
     private static void setScreenshot(String screenshotPath) {
         loaded = false;
-        filePath = new File(Minecraft.getInstance().gameDir, screenshotPath);
+        filePath = Paths.get(Minecraft.getInstance().gameDir.getPath(), screenshotPath);
 
-        if (filePath.isFile()) {
-            try (InputStream in = new FileInputStream(filePath)) {
+        if (Files.isRegularFile(filePath)) {
+            try (InputStream in = new FileInputStream(filePath.toFile())) {
                 NativeImage image = NativeImage.read(in);
-                imageRatio = image.getWidth()/ (float) image.getHeight();
+                imageRatio = image.getWidth() / (float) image.getHeight();
                 Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
                 loaded = true;
-                SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at {}", filePath.getPath());
+                SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at {}", filePath);
             } catch (IOException e) {
                 SeamlessLoadingScreen.LOGGER.error("Failed to read screenshot", e);
             }
         } else {
-            SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist or is not a file {}", filePath.getPath());
+            SeamlessLoadingScreen.LOGGER.warn("Screenshot path doesn't exist or is not a file {}", filePath);
         }
     }
 
@@ -74,7 +76,7 @@ public class ScreenshotLoader {
         return imageRatio;
     }
 
-    public static File getCurrentScreenshotPath() {
+    public static Path getCurrentScreenshotPath() {
         return filePath;
     }
 

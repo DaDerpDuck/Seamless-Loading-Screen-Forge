@@ -22,9 +22,9 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SeamlessLoadingScreen.MOD_ID)
 public class EventHandler {
@@ -94,11 +94,11 @@ public class EventHandler {
     @SubscribeEvent
     public static void onSaveDelete(DeleteSaveEvent event) {
         ScreenshotLoader.setScreenshotWorld(event.saveDir.getFileName().toString());
-        File screenshot = ScreenshotLoader.getCurrentScreenshotPath();
+        Path screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
 
         try {
-            SeamlessLoadingScreen.LOGGER.info("Deleting screenshot at {}", screenshot.toString());
-            Files.deleteIfExists(screenshot.toPath());
+            SeamlessLoadingScreen.LOGGER.info("Deleting screenshot at {}", screenshotPath);
+            Files.deleteIfExists(screenshotPath);
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to delete screenshot", e);
         }

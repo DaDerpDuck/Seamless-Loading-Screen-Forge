@@ -1,8 +1,8 @@
 package com.daderpduck.seamless_loading_screen;
 
 import com.daderpduck.seamless_loading_screen.config.Config;
-import com.daderpduck.seamless_loading_screen.events.OFLagometerEvent;
 import com.daderpduck.seamless_loading_screen.events.OFFpsDrawEvent;
+import com.daderpduck.seamless_loading_screen.events.OFLagometerEvent;
 import com.daderpduck.seamless_loading_screen.mixin.WindowAccessor;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -24,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -91,6 +92,7 @@ public class ScreenshotTaker extends Screen {
         if (mc == null) return;
 
         writeScreenshot();
+        if (Config.UpdateWorldIcon.get()) tryCreateWorldIcon(mc);
 
         mc.gameSettings.hideGUI = hideGUI;
         takingScreenshot = false;
@@ -133,6 +135,32 @@ public class ScreenshotTaker extends Screen {
             }
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
+        }
+    }
+
+    private static void tryCreateWorldIcon(Minecraft mc) {
+        if (mc.isSingleplayer() && Objects.requireNonNull(mc.getIntegratedServer()).isWorldIconSet()) {
+            NativeImage nativeimage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer());
+            int i = nativeimage.getWidth();
+            int j = nativeimage.getHeight();
+            int k = 0;
+            int l = 0;
+            if (i > j) {
+                k = (i - j) / 2;
+                i = j;
+            } else {
+                l = (j - i) / 2;
+                j = i;
+            }
+
+            try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
+                nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
+                nativeimage1.write(mc.getIntegratedServer().getWorldIconFile());
+            } catch (IOException ioexception) {
+                SeamlessLoadingScreen.LOGGER.warn("Couldn't save auto screenshot", ioexception);
+            } finally {
+                nativeimage.close();
+            }
         }
     }
 

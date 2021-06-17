@@ -56,7 +56,7 @@ public class ScreenshotTaker extends Screen {
 
             mc.gameSettings.hideGUI = true;
             Config.ScreenshotResolution resolution = Config.Resolution.get();
-            resizeScreen(mc, resolution.width, resolution.height);
+            if (resolution != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, resolution.width, resolution.height);
             mc.displayGuiScreen(new ScreenshotTaker());
         }
     }
@@ -94,7 +94,7 @@ public class ScreenshotTaker extends Screen {
 
         mc.gameSettings.hideGUI = hideGUI;
         takingScreenshot = false;
-        resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
+        if (Config.Resolution.get() != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
         MinecraftForge.EVENT_BUS.unregister(cancelOverlayListener);
         MinecraftForge.EVENT_BUS.unregister(drawFpsListener);
         MinecraftForge.EVENT_BUS.unregister(lagometerListener);

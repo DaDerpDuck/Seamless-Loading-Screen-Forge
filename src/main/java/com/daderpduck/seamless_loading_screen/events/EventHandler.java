@@ -86,7 +86,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void onRenderBackground(GuiScreenEvent.BackgroundDrawnEvent event) {
         if (ScreenshotLoader.isLoaded()) {
-            ScreenshotRenderer.renderScreenshot(event.getGui().height, event.getGui().width, 255);
+            ScreenshotRenderer.renderScreenshot(event.getGui().height, event.getGui().width, 1F);
         }
     }
 
@@ -116,7 +116,7 @@ public class EventHandler {
                 int scaledHeight = mc.getWindow().getScreenHeight();
                 int scaledWidth = mc.getWindow().getScreenWidth();
 
-                ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, (int)(alpha*255));
+                ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, alpha);
 
                 if (ScreenshotRenderer.Fader.isHolding() && mc.screen == null)
                     GuiComponent.drawCenteredString(new PoseStack(), mc.font, new TranslatableComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);

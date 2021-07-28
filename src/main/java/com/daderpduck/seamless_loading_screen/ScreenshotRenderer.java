@@ -10,19 +10,17 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 
 public class ScreenshotRenderer {
-    public static void renderScreenshot(double screenHeight, double screenWidth, int alpha) {
+    public static void renderScreenshot(double screenHeight, double screenWidth, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         float imageRatio = ScreenshotLoader.getImageRatio();
         float windowRatio = (float)mc.getWindow().getWidth()/mc.getWindow().getHeight(); // TODO: Fix resize glitches
         float offset = 1 - windowRatio/imageRatio;
 
-        float f = alpha/255F;
-
         RenderSystem.disableDepthTest();
         RenderSystem.depthMask(false);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1F, 1F, 1F, f);
+        RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, ScreenshotLoader.SCREENSHOT);
         Tesselator tesselator = Tesselator.getInstance();

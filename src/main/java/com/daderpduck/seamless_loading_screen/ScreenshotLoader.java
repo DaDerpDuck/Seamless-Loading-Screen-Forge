@@ -1,10 +1,10 @@
 package com.daderpduck.seamless_loading_screen;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SharedConstants;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,13 +38,13 @@ public class ScreenshotLoader {
 
     private static void setScreenshot(String screenshotPath) {
         loaded = false;
-        filePath = Paths.get(Minecraft.getInstance().gameDir.getPath(), screenshotPath);
+        filePath = Paths.get(Minecraft.getInstance().gameDirectory.getPath(), screenshotPath);
 
         if (Files.isRegularFile(filePath)) {
             try (InputStream in = new FileInputStream(filePath.toFile())) {
                 NativeImage image = NativeImage.read(in);
                 imageRatio = image.getWidth() / (float) image.getHeight();
-                Minecraft.getInstance().getTextureManager().loadTexture(SCREENSHOT, new DynamicTexture(image));
+                Minecraft.getInstance().getTextureManager().register(SCREENSHOT, new DynamicTexture(image));
                 loaded = true;
                 SeamlessLoadingScreen.LOGGER.info("Screenshot loaded at {}", filePath);
             } catch (IOException e) {

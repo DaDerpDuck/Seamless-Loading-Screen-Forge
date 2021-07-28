@@ -1,17 +1,14 @@
 package com.daderpduck.seamless_loading_screen;
 
 import com.daderpduck.seamless_loading_screen.config.Config;
-import com.daderpduck.seamless_loading_screen.config.ConfigScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.fml.network.FMLNetworkConstants;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,19 +28,16 @@ public class SeamlessLoadingScreen
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
         Config.init(FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-client.toml").toString());
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> ConfigScreen::new);
 
-        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.DISPLAYTEST, () -> Pair.of(
-                () -> FMLNetworkConstants.IGNORESERVERONLY,
-                (version, network) -> true)
+        ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(
+                () -> null,
+                (version, network) -> network)
         );
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        Minecraft minecraft = event.getMinecraftSupplier().get();
-
         try {
-            String gameDirPath = minecraft.gameDir.getPath();
+            String gameDirPath = Minecraft.getInstance().gameDirectory.getPath();
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/singleplayer"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/servers"));
             Files.createDirectories(Paths.get(gameDirPath, "screenshots/worlds/realms"));

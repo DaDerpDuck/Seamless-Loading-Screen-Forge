@@ -5,17 +5,16 @@ import com.daderpduck.seamless_loading_screen.ScreenshotRenderer;
 import com.daderpduck.seamless_loading_screen.ScreenshotTaker;
 import com.daderpduck.seamless_loading_screen.SeamlessLoadingScreen;
 import com.daderpduck.seamless_loading_screen.config.Config;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.gui.screens.RealmsGenericErrorScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.ConnectingScreen;
-import net.minecraft.client.gui.screen.DisconnectedScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.multiplayer.ServerAddress;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.ConnectScreen;
+import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.multiplayer.resolver.ServerAddress;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.event.TickEvent;
@@ -33,12 +32,12 @@ public class EventHandler {
         Screen screen = event.getGui();
         Minecraft mc = Minecraft.getInstance();
 
-        if (screen instanceof ConnectingScreen) {
-            ServerData serverData = mc.getCurrentServerData();
+        if (screen instanceof ConnectScreen) {
+            ServerData serverData = mc.getCurrentServer();
             if (serverData == null) return;
-            Minecraft.getInstance().mouseHelper.ignoreFirstMove();
-            ServerAddress serveraddress = ServerAddress.fromString(serverData.serverIP);
-            ScreenshotLoader.setScreenshotServer(serveraddress.getIP(), serveraddress.getPort());
+            Minecraft.getInstance().mouseHandler.setIgnoreFirstMove();
+            ServerAddress serveraddress = ServerAddress.parseString(serverData.ip);
+            ScreenshotLoader.setScreenshotServer(serveraddress.getHost(), serveraddress.getPort());
         } else if (screen instanceof DisconnectedScreen) {
             ScreenshotLoader.resetState();
         } else if (screen instanceof RealmsGenericErrorScreen) {
@@ -48,15 +47,15 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void onWorldJoin(PreLoadWorldEvent event) {
-        Minecraft.getInstance().mouseHelper.ignoreFirstMove();
+        Minecraft.getInstance().mouseHandler.setIgnoreFirstMove();
         ScreenshotLoader.setScreenshotWorld(event.worldName);
         ScreenshotTaker.shouldSaveScreenshot(true);
     }
 
     @SubscribeEvent
     public static void onRealmsJoin(RealmsJoinEvent event) {
-        Minecraft.getInstance().mouseHelper.ignoreFirstMove();
-        ScreenshotLoader.setScreenshotRealm(event.realmsServer.field_230584_c_); // realm name
+        Minecraft.getInstance().mouseHandler.setIgnoreFirstMove();
+        ScreenshotLoader.setScreenshotRealm(event.realmsServer.getName());
         ScreenshotTaker.shouldSaveScreenshot(true);
     }
 
@@ -65,10 +64,10 @@ public class EventHandler {
     public static void onUnloadWorld(PreUnloadWorldEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (!takenScreenshot && mc.world != null) {
+        if (!takenScreenshot && mc.level != null) {
             ScreenshotTaker.takeScreenshot(ignored -> {
                 takenScreenshot = true;
-                mc.unloadWorld(event.nextScreen);
+                mc.clearLevel(event.nextScreen);
             });
             ScreenshotLoader.resetState();
             event.setCanceled(true);
@@ -110,22 +109,17 @@ public class EventHandler {
     public static void onRenderTickEnd(TickEvent.RenderTickEvent event) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (ScreenshotLoader.isLoaded() && mc.currentScreen == null) {
+        if (ScreenshotLoader.isLoaded() && mc.screen == null) {
             float alpha = ScreenshotRenderer.Fader.getAlpha();
 
             if (alpha > 0) {
-                int scaledHeight = mc.getMainWindow().getScaledHeight();
-                int scaledWidth = mc.getMainWindow().getScaledWidth();
+                int scaledHeight = mc.getWindow().getScreenHeight();
+                int scaledWidth = mc.getWindow().getScreenWidth();
 
-                RenderSystem.enableBlend();
-                RenderSystem.defaultBlendFunc();
-                RenderSystem.disableAlphaTest();
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, (int)(alpha*255));
-                RenderSystem.enableAlphaTest();
-                RenderSystem.disableBlend();
 
-                if (ScreenshotRenderer.Fader.isHolding() && mc.currentScreen == null)
-                    AbstractGui.drawCenteredString(new MatrixStack(), mc.fontRenderer, new TranslationTextComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
+                if (ScreenshotRenderer.Fader.isHolding() && mc.screen == null)
+                    GuiComponent.drawCenteredString(new PoseStack(), mc.font, new TranslatableComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
 
                 ScreenshotRenderer.Fader.tick(event.renderTickTime);
             } else {

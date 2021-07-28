@@ -3,13 +3,13 @@ package com.daderpduck.seamless_loading_screen;
 import com.daderpduck.seamless_loading_screen.config.Config;
 import com.daderpduck.seamless_loading_screen.events.OFFpsDrawEvent;
 import com.daderpduck.seamless_loading_screen.events.OFLagometerEvent;
-import com.daderpduck.seamless_loading_screen.mixin.WindowAccessor;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.platform.Window;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.texture.NativeImage;
-import net.minecraft.util.ScreenShotHelper;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.Screenshot;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 /**
@@ -43,7 +42,7 @@ public class ScreenshotTaker extends Screen {
     private final Consumer<OFLagometerEvent> lagometerListener = this::cancelLagometer;
 
     protected ScreenshotTaker() {
-        super(new TranslationTextComponent("connect.joining"));
+        super(new TranslatableComponent("connect.joining"));
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, cancelOverlayListener);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, drawFpsListener);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, lagometerListener);
@@ -53,14 +52,14 @@ public class ScreenshotTaker extends Screen {
         SeamlessLoadingScreen.LOGGER.info("Taking screenshot (takingScreenshot: {}, saveScreenshot: {})", takingScreenshot, saveScreenshot);
         Minecraft mc = Minecraft.getInstance();
 
-        if (!takingScreenshot && mc.world != null) {
+        if (!takingScreenshot && mc.level != null) {
             takingScreenshot = true;
-            hideGUI = mc.gameSettings.hideGUI;
+            hideGUI = mc.options.hideGui;
 
-            mc.gameSettings.hideGUI = true;
+            mc.options.hideGui = true;
             Config.ScreenshotResolution resolution = Config.Resolution.get();
             if (resolution != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, resolution.width, resolution.height);
-            mc.displayGuiScreen(new ScreenshotTaker());
+            mc.setScreen(new ScreenshotTaker());
         }
     }
 
@@ -76,18 +75,18 @@ public class ScreenshotTaker extends Screen {
         saveScreenshot = b;
     }
 
+    // TODO: Fix resize glitches
     private static void resizeScreen(Minecraft mc, int width, int height) {
-        @SuppressWarnings("ConstantConditions")
-        WindowAccessor windowAccessor = (WindowAccessor) (Object) mc.getMainWindow();
+        Window window = mc.getWindow();
 
-        windowAccessor.setFramebufferWidth(width);
-        windowAccessor.setFramebufferHeight(height);
+        window.setWidth(width);
+        window.setHeight(height);
 
-        mc.updateWindowSize();
+        mc.resizeDisplay();
     }
 
     @Override
-    public void render(@Nonnull MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(@Nonnull PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (!takingScreenshot) return;
 
         Minecraft mc = this.minecraft;
@@ -96,9 +95,9 @@ public class ScreenshotTaker extends Screen {
         writeScreenshot();
         if (Config.UpdateWorldIcon.get()) tryCreateWorldIcon(mc);
 
-        mc.gameSettings.hideGUI = hideGUI;
+        mc.options.hideGui = hideGUI;
         takingScreenshot = false;
-        if (Config.Resolution.get() != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, mc.getMainWindow().getWidth(), mc.getMainWindow().getHeight());
+        if (Config.Resolution.get() != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, mc.getWindow().getWidth(), mc.getWindow().getHeight());
         MinecraftForge.EVENT_BUS.unregister(cancelOverlayListener);
         MinecraftForge.EVENT_BUS.unregister(drawFpsListener);
         MinecraftForge.EVENT_BUS.unregister(lagometerListener);
@@ -119,18 +118,18 @@ public class ScreenshotTaker extends Screen {
         Minecraft mc = this.minecraft;
         if (mc == null) return;
 
-        try (NativeImage screenshotImage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer())) {
+        try (NativeImage screenshotImage = Screenshot.takeScreenshot(mc.getMainRenderTarget())) {
             Path screenshotPath = ScreenshotLoader.getCurrentScreenshotPath();
             SeamlessLoadingScreen.LOGGER.info("Saving screenshot at {}", screenshotPath);
 
             AsynchronousFileChannel channel = AsynchronousFileChannel.open(screenshotPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-            channel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
+            channel.write(ByteBuffer.wrap(screenshotImage.asByteArray()), 0);
 
             if (Config.ArchiveScreenshots.get()) {
                 String fileName = FilenameUtils.removeExtension(screenshotPath.getFileName().toString());
-                Path archivePath = Paths.get(Minecraft.getInstance().gameDir.getPath(), "screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
+                Path archivePath = Paths.get(Minecraft.getInstance().gameDirectory.getPath(), "screenshots/worlds/archive/" + fileName + "_" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + ".png");
                 AsynchronousFileChannel archiveChannel = AsynchronousFileChannel.open(archivePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                archiveChannel.write(ByteBuffer.wrap(screenshotImage.getBytes()), 0);
+                archiveChannel.write(ByteBuffer.wrap(screenshotImage.asByteArray()), 0);
             }
         } catch (IOException e) {
             SeamlessLoadingScreen.LOGGER.error("Failed to save screenshot", e);
@@ -138,8 +137,8 @@ public class ScreenshotTaker extends Screen {
     }
 
     private static void tryCreateWorldIcon(Minecraft mc) {
-        if (mc.isSingleplayer() && Objects.requireNonNull(mc.getIntegratedServer()).isWorldIconSet()) {
-            NativeImage nativeimage = ScreenShotHelper.createScreenshot(mc.getMainWindow().getFramebufferWidth(), mc.getMainWindow().getFramebufferHeight(), mc.getFramebuffer());
+        if (mc.isLocalServer() && mc.getSingleplayerServer() != null && mc.getSingleplayerServer().getWorldScreenshotFile().isPresent()) {
+            NativeImage nativeimage = Screenshot.takeScreenshot(mc.getMainRenderTarget());
             int i = nativeimage.getWidth();
             int j = nativeimage.getHeight();
             int k = 0;
@@ -154,8 +153,8 @@ public class ScreenshotTaker extends Screen {
 
             try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
                 nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
-                AsynchronousFileChannel channel = AsynchronousFileChannel.open(mc.getIntegratedServer().getWorldIconFile().toPath(), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-                channel.write(ByteBuffer.wrap(nativeimage1.getBytes()), 0);
+                AsynchronousFileChannel channel = AsynchronousFileChannel.open(mc.getSingleplayerServer().getWorldScreenshotFile().get(), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+                channel.write(ByteBuffer.wrap(nativeimage1.asByteArray()), 0);
             } catch (IOException ioexception) {
                 SeamlessLoadingScreen.LOGGER.warn("Couldn't save auto screenshot", ioexception);
             } finally {

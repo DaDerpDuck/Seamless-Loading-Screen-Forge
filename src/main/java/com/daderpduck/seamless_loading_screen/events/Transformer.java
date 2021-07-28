@@ -22,7 +22,6 @@ public class Transformer {
     }
 
     public static void preLoadLevel(String fileName) {
-        System.out.println("HI THERE" + fileName);
         MinecraftForge.EVENT_BUS.post(new PreLoadWorldEvent(fileName));
     }
 }

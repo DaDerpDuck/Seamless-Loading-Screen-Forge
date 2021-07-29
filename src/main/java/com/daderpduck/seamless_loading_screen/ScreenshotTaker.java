@@ -97,7 +97,7 @@ public class ScreenshotTaker extends Screen {
 
         mc.options.hideGui = hideGUI;
         takingScreenshot = false;
-        if (Config.Resolution.get() != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, mc.getWindow().getWidth(), mc.getWindow().getHeight());
+        if (Config.Resolution.get() != Config.ScreenshotResolution.NATIVE) resizeScreen(mc, mc.getWindow().getScreenWidth(), mc.getWindow().getScreenHeight());
         MinecraftForge.EVENT_BUS.unregister(cancelOverlayListener);
         MinecraftForge.EVENT_BUS.unregister(drawFpsListener);
         MinecraftForge.EVENT_BUS.unregister(lagometerListener);

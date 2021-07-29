@@ -113,8 +113,8 @@ public class EventHandler {
             float alpha = ScreenshotRenderer.Fader.getAlpha();
 
             if (alpha > 0) {
-                int scaledHeight = mc.getWindow().getScreenHeight();
-                int scaledWidth = mc.getWindow().getScreenWidth();
+                int scaledHeight = mc.getWindow().getGuiScaledHeight();
+                int scaledWidth = mc.getWindow().getGuiScaledWidth();
 
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, alpha);
 

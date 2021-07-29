@@ -13,7 +13,7 @@ public class ScreenshotRenderer {
     public static void renderScreenshot(double screenHeight, double screenWidth, float alpha) {
         Minecraft mc = Minecraft.getInstance();
         float imageRatio = ScreenshotLoader.getImageRatio();
-        float windowRatio = (float)mc.getWindow().getWidth()/mc.getWindow().getHeight(); // TODO: Fix resize glitches
+        float windowRatio = (float)mc.getWindow().getWidth()/mc.getWindow().getHeight();
         float offset = 1 - windowRatio/imageRatio;
 
         RenderSystem.disableDepthTest();

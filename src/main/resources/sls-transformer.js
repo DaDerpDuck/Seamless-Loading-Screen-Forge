@@ -147,6 +147,22 @@ function initializeCoreMod() {
 
 				return methodNode;
 			}
-        }
+        },
+        'RealmsMainScreen#play': {
+			'target': {
+				'type': 'METHOD',
+				'class': 'com.mojang.realmsclient.RealmsMainScreen',
+				'methodName': ASMAPI.mapMethod('play'),
+				'methodDesc': '(Lcom/mojang/realmsclient/dto/RealmsServer;Lnet/minecraft/client/gui/screens/Screen;)V'
+			},
+			'transformer': function(methodNode) {
+				var list = ASMAPI.listOf(
+					new VarInsnNode(Opcodes.ALOAD, 1),
+					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postRealmJoin", "(Lcom/mojang/realmsclient/dto/RealmsServer;)V", ASMAPI.MethodType.STATIC)
+				);
+				methodNode.instructions.insert(list);
+				return methodNode;
+			}
+		}
     };
 }

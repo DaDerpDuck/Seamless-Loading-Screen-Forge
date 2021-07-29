@@ -8,6 +8,7 @@ function initializeCoreMod() {
     var LabelNode = Java.type('org.objectweb.asm.tree.LabelNode');
     var JumpInsnNode = Java.type('org.objectweb.asm.tree.JumpInsnNode');
     var FieldInsnNode = Java.type('org.objectweb.asm.tree.FieldInsnNode');
+    var LdcInsnNode = Java.type('org.objectweb.asm.tree.LdcInsnNode');
 
     return {
         'Minecraft#createLevel': {
@@ -71,11 +72,11 @@ function initializeCoreMod() {
 				return methodNode;
 			}
         },
-        'MouseHandler#setIgnoreFirstMove': {
+        'MouseHandler#turnPlayer': {
         	'target': {
 				'type': 'METHOD',
 				'class': 'net.minecraft.client.MouseHandler',
-				'methodName': ASMAPI.mapMethod('setIgnoreFirstMove'),
+				'methodName': ASMAPI.mapMethod('turnPlayer'),
 				'methodDesc': '()V'
 			},
 			'transformer': function(methodNode) {
@@ -84,14 +85,36 @@ function initializeCoreMod() {
 				var list = ASMAPI.listOf(
 					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "turnPlayer", "()Z", ASMAPI.MethodType.STATIC),
 					new JumpInsnNode(Opcodes.IFEQ, skip),
+					new VarInsnNode(Opcodes.ALOAD, 0),
 					new InsnNode(Opcodes.DCONST_0),
-					new FieldInsnNode(Opcodes.SETFIELD, "net/minecraft/client/MouseHandler", ASMAPI.mapField("accumulatedDX"), "D"),
+					new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/client/MouseHandler", ASMAPI.mapField("accumulatedDX"), "D"),
+					new VarInsnNode(Opcodes.ALOAD, 0),
 					new InsnNode(Opcodes.DCONST_0),
-					new FieldInsnNode(Opcodes.SETFIELD, "net/minecraft/client/MouseHandler", ASMAPI.mapField("accumulatedDY"), "D"),
-					new InsnNode(Opcodes.RETURN)
+					new FieldInsnNode(Opcodes.PUTFIELD, "net/minecraft/client/MouseHandler", ASMAPI.mapField("accumulatedDY"), "D"),
+					new InsnNode(Opcodes.RETURN),
 					skip
 				);
 				methodNode.instructions.insert(list);
+
+				return methodNode;
+			}
+        },
+        'LevelLoadingScreen#renderChunks': {
+        	'target': {
+				'type': 'METHOD',
+				'class': 'net.minecraft.client.gui.screens.LevelLoadingScreen',
+				'methodName': ASMAPI.mapMethod('renderChunks'),
+				'methodDesc': '(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/server/level/progress/StoringChunkProgressListener;IIII)V'
+			},
+			'transformer': function(methodNode) {
+
+				var iterator = methodNode.instructions.iterator();
+				while (iterator.hasNext()) {
+					var insnNode = iterator.next();
+					if (insnNode.getOpcode() === Opcodes.LDC && insnNode.cst === -16777216) {
+						insnNode.cst = -1442840576;
+					}
+				}
 
 				return methodNode;
 			}

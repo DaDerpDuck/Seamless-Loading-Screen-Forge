@@ -21,7 +21,7 @@ function initializeCoreMod() {
             'transformer': function(methodNode) {
 				var list = ASMAPI.listOf(
 					new VarInsnNode(Opcodes.ALOAD, 1),
-					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "onCreateLevel", "(Ljava/lang/String;)V", ASMAPI.MethodType.STATIC)
+					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postPreLoadLevel", "(Ljava/lang/String;)V", ASMAPI.MethodType.STATIC)
 				);
 				methodNode.instructions.insert(list);
 
@@ -40,7 +40,7 @@ function initializeCoreMod() {
 
         		var list = ASMAPI.listOf(
         			new VarInsnNode(Opcodes.ALOAD, 1),
-        			ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "clearLevelScreenshot", "(Lnet/minecraft/client/gui/screens/Screen;)Z", ASMAPI.MethodType.STATIC),
+        			ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postClearLevel", "(Lnet/minecraft/client/gui/screens/Screen;)Z", ASMAPI.MethodType.STATIC),
         			new JumpInsnNode(Opcodes.IFEQ, skip),
         			new VarInsnNode(Opcodes.ALOAD, 0),
         			new InsnNode(Opcodes.ICONST_1),
@@ -65,7 +65,7 @@ function initializeCoreMod() {
 					new VarInsnNode(Opcodes.ALOAD, 0),
 					new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/gui/screens/worldselection/WorldSelectionList$WorldListEntry", ASMAPI.mapField("summary"), "Lnet/minecraft/world/level/storage/LevelSummary;"),
 					ASMAPI.buildMethodCall("net/minecraft/world/level/storage/LevelSummary", ASMAPI.mapMethod("getLevelName"), "()Ljava/lang/String;", ASMAPI.MethodType.VIRTUAL),
-					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "preLoadLevel", "(Ljava/lang/String;)V", ASMAPI.MethodType.STATIC)
+					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postPreLoadLevel", "(Ljava/lang/String;)V", ASMAPI.MethodType.STATIC)
 				);
 				methodNode.instructions.insert(list);
 
@@ -83,7 +83,7 @@ function initializeCoreMod() {
 				var skip = new LabelNode();
 
 				var list = ASMAPI.listOf(
-					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "turnPlayer", "()Z", ASMAPI.MethodType.STATIC),
+					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "checkLockTurn", "()Z", ASMAPI.MethodType.STATIC),
 					new JumpInsnNode(Opcodes.IFEQ, skip),
 					new VarInsnNode(Opcodes.ALOAD, 0),
 					new InsnNode(Opcodes.DCONST_0),
@@ -111,8 +111,9 @@ function initializeCoreMod() {
 				var iterator = methodNode.instructions.iterator();
 				while (iterator.hasNext()) {
 					var insnNode = iterator.next();
-					if (insnNode.getOpcode() === Opcodes.LDC && insnNode.cst === -16777216) {
-						insnNode.cst = -1442840576;
+					if (insnNode.getOpcode() === Opcodes.INVOKESTATIC && insnNode.owner === "net/minecraft/client/gui/screens/LevelLoadingScreen" && insnNode.name === ASMAPI.mapMethod("fill") && insnNode.desc === "(Lcom/mojang/blaze3d/vertex/PoseStack;IIIII)V") {
+						insnNode.owner = "com/daderpduck/seamless_loading_screen/events/Transformer";
+						insnNode.name = "changeChunkLoadFill";
 					}
 				}
 

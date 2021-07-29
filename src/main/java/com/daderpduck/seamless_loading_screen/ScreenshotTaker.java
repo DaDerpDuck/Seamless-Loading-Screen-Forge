@@ -75,7 +75,6 @@ public class ScreenshotTaker extends Screen {
         saveScreenshot = b;
     }
 
-    // TODO: Fix resize glitches
     private static void resizeScreen(Minecraft mc, int width, int height) {
         Window window = mc.getWindow();
 

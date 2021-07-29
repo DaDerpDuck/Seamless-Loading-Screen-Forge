@@ -64,7 +64,7 @@ function initializeCoreMod() {
 				var list = ASMAPI.listOf(
 					new VarInsnNode(Opcodes.ALOAD, 0),
 					new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/client/gui/screens/worldselection/WorldSelectionList$WorldListEntry", ASMAPI.mapField("summary"), "Lnet/minecraft/world/level/storage/LevelSummary;"),
-					ASMAPI.buildMethodCall("net/minecraft/world/level/storage/LevelSummary", ASMAPI.mapMethod("getLevelName"), "()Ljava/lang/String;", ASMAPI.MethodType.VIRTUAL),
+					ASMAPI.buildMethodCall("net/minecraft/world/level/storage/LevelSummary", ASMAPI.mapMethod("getLevelId"), "()Ljava/lang/String;", ASMAPI.MethodType.VIRTUAL),
 					ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postPreLoadLevel", "(Ljava/lang/String;)V", ASMAPI.MethodType.STATIC)
 				);
 				methodNode.instructions.insert(list);
@@ -107,7 +107,6 @@ function initializeCoreMod() {
 				'methodDesc': '(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/server/level/progress/StoringChunkProgressListener;IIII)V'
 			},
 			'transformer': function(methodNode) {
-
 				var iterator = methodNode.instructions.iterator();
 				while (iterator.hasNext()) {
 					var insnNode = iterator.next();
@@ -115,6 +114,35 @@ function initializeCoreMod() {
 						insnNode.owner = "com/daderpduck/seamless_loading_screen/events/Transformer";
 						insnNode.name = "changeChunkLoadFill";
 					}
+				}
+
+				return methodNode;
+			}
+        },
+        'SaveFormat$LevelSave#deleteLevel': {
+        	'target': {
+				'type': 'METHOD',
+				'class': 'net.minecraft.world.level.storage.LevelStorageSource$LevelStorageAccess',
+				'methodName': ASMAPI.mapMethod('deleteLevel'),
+				'methodDesc': '()V'
+			},
+			'transformer': function(methodNode) {
+				var iterator = methodNode.instructions.iterator();
+				var tail;
+				while (iterator.hasNext()) {
+					var insnNode = iterator.next();
+					if (insnNode.getOpcode() === Opcodes.RETURN) {
+						tail = insnNode;
+					}
+				}
+
+				if (tail) {
+					var list = ASMAPI.listOf(
+						new VarInsnNode(Opcodes.ALOAD, 0),
+						new FieldInsnNode(Opcodes.GETFIELD, "net/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess", ASMAPI.mapField("levelPath"), "Ljava/nio/file/Path;"),
+						ASMAPI.buildMethodCall("com/daderpduck/seamless_loading_screen/events/Transformer", "postDeleteSave", "(Ljava/nio/file/Path;)V", ASMAPI.MethodType.STATIC)
+					);
+					methodNode.instructions.insertBefore(tail, list);
 				}
 
 				return methodNode;

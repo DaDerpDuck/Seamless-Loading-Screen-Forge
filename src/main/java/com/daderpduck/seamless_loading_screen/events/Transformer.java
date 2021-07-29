@@ -6,6 +6,8 @@ import net.minecraft.client.gui.screens.LevelLoadingScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.nio.file.Path;
+
 public class Transformer {
     public static void postPreLoadLevel(String worldName) {
         MinecraftForge.EVENT_BUS.post(new PreLoadWorldEvent(worldName));
@@ -25,5 +27,9 @@ public class Transformer {
 
     public static void changeChunkLoadFill(PoseStack poseStack, int x1, int y1, int x2, int y2, int color) {
         LevelLoadingScreen.fill(poseStack, x1, y1, x2, y2, color == -16777216 ? -1442840576 : color);
+    }
+
+    public static void postDeleteSave(Path saveDir) {
+        MinecraftForge.EVENT_BUS.post(new DeleteSaveEvent(saveDir));
     }
 }

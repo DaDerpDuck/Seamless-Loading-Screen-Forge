@@ -32,4 +32,12 @@ public class Transformer {
     public static void postDeleteSave(Path saveDir) {
         MinecraftForge.EVENT_BUS.post(new DeleteSaveEvent(saveDir));
     }
+
+    public static boolean OFFpsDraw() {
+        return MinecraftForge.EVENT_BUS.post(new OFFpsDrawEvent());
+    }
+
+    public static boolean OFLagometer() {
+        return MinecraftForge.EVENT_BUS.post(new OFLagometerEvent());
+    }
 }

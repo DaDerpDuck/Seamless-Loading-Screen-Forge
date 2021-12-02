@@ -16,7 +16,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,8 +28,8 @@ import java.nio.file.Path;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SeamlessLoadingScreen.MOD_ID)
 public class EventHandler {
     @SubscribeEvent
-    public static void initGuiEvent(GuiScreenEvent.InitGuiEvent event) {
-        Screen screen = event.getGui();
+    public static void initGuiEvent(ScreenEvent.InitScreenEvent event) {
+        Screen screen = event.getScreen();
         Minecraft mc = Minecraft.getInstance();
 
         if (screen instanceof ConnectScreen) {
@@ -84,9 +84,9 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onRenderBackground(GuiScreenEvent.BackgroundDrawnEvent event) {
+    public static void onRenderBackground(ScreenEvent.BackgroundDrawnEvent event) {
         if (ScreenshotLoader.isLoaded()) {
-            ScreenshotRenderer.renderScreenshot(event.getGui().height, event.getGui().width, 1F);
+            ScreenshotRenderer.renderScreenshot(event.getScreen().height, event.getScreen().width, 1F);
         }
     }
 

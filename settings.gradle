@@ -1,2 +1,8 @@
-rootProject.name = 'SeamlessLoadingScreen'
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.minecraftforge.net/' }
+    }
+}
 
+rootProject.name = 'SeamlessLoadingScreen'

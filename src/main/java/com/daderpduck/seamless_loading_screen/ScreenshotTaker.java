@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -42,7 +42,7 @@ public class ScreenshotTaker extends Screen {
     private final Consumer<OFLagometerEvent> lagometerListener = this::cancelLagometer;
 
     protected ScreenshotTaker() {
-        super(new TranslatableComponent("connect.joining"));
+        super(Component.translatable("connect.joining"));
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, cancelOverlayListener);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, drawFpsListener);
         MinecraftForge.EVENT_BUS.addListener(EventPriority.HIGHEST, lagometerListener);

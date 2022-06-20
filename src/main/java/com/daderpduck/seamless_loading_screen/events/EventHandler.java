@@ -14,7 +14,7 @@ import net.minecraft.client.gui.screens.DisconnectedScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.event.TickEvent;
@@ -119,7 +119,7 @@ public class EventHandler {
                 ScreenshotRenderer.renderScreenshot(scaledHeight, scaledWidth, alpha);
 
                 if (ScreenshotRenderer.Fader.isHolding() && mc.screen == null)
-                    GuiComponent.drawCenteredString(new PoseStack(), mc.font, new TranslatableComponent("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
+                    GuiComponent.drawCenteredString(new PoseStack(), mc.font, Component.translatable("multiplayer.downloadingTerrain"), scaledWidth/2,70,0xFFFFFF);
 
                 ScreenshotRenderer.Fader.tick(event.renderTickTime);
             } else {

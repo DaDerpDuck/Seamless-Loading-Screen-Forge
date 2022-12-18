@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.EventPriority;
 import org.apache.commons.io.FilenameUtils;
@@ -37,7 +37,7 @@ public class ScreenshotTaker extends Screen {
     private static boolean saveScreenshot = true;
     private static boolean hideGUI;
     private static final List<Consumer<Minecraft>> consumers = new ArrayList<>();
-    private final Consumer<RenderGameOverlayEvent.Pre> cancelOverlayListener = this::cancelGuiOverlay;
+    private final Consumer<RenderGuiOverlayEvent.Pre> cancelOverlayListener = this::cancelGuiOverlay;
     private final Consumer<OFFpsDrawEvent> drawFpsListener = this::cancelFpsDraw;
     private final Consumer<OFLagometerEvent> lagometerListener = this::cancelLagometer;
 
@@ -162,7 +162,7 @@ public class ScreenshotTaker extends Screen {
         }
     }
 
-    private void cancelGuiOverlay(RenderGameOverlayEvent.Pre event) {
+    private void cancelGuiOverlay(RenderGuiOverlayEvent.Pre event) {
         if (takingScreenshot) event.setCanceled(true);
     }
     private void cancelFpsDraw(OFFpsDrawEvent event) {

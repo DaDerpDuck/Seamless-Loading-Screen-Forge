@@ -28,7 +28,7 @@ import java.nio.file.Path;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = SeamlessLoadingScreen.MOD_ID)
 public class EventHandler {
     @SubscribeEvent
-    public static void initGuiEvent(ScreenEvent.InitScreenEvent event) {
+    public static void initGuiEvent(ScreenEvent.Init event) {
         Screen screen = event.getScreen();
         Minecraft mc = Minecraft.getInstance();
 
@@ -67,6 +67,7 @@ public class EventHandler {
         if (!takenScreenshot && mc.level != null) {
             ScreenshotTaker.takeScreenshot(ignored -> {
                 takenScreenshot = true;
+                mc.options.renderDebug = false; // fixes a crash
                 mc.clearLevel(event.nextScreen);
             });
             ScreenshotLoader.resetState();
@@ -84,7 +85,7 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void onRenderBackground(ScreenEvent.BackgroundDrawnEvent event) {
+    public static void onRenderBackground(ScreenEvent.BackgroundRendered event) {
         if (ScreenshotLoader.isLoaded()) {
             ScreenshotRenderer.renderScreenshot(event.getScreen().height, event.getScreen().width, 1F);
         }

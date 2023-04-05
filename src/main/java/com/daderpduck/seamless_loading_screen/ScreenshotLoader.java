@@ -25,11 +25,11 @@ public class ScreenshotLoader {
     private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
 
     public static void setScreenshotWorld(String worldName) {
-        setScreenshot("screenshots/worlds/singleplayer/" + worldName + ".png");
+        setScreenshot("screenshots/worlds/singleplayer/" + cleanFileName(worldName) + ".png");
     }
 
     public static void setScreenshotServer(String address, int port) {
-        setScreenshot("screenshots/worlds/servers/" + address + "_" + port + ".png");
+        setScreenshot("screenshots/worlds/servers/" + cleanFileName(address + "_" + port) + ".png");
     }
 
     public static void setScreenshotRealm(String realmName) {

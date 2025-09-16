@@ -1,3 +1,5 @@
+This project has been archived and will not see further updates. For MC versions 1.20+, see [Minenash's mod](https://www.curseforge.com/minecraft/mc-mods/seamless-loading-screen).
+
 # Seamless Loading Screen (Forge)
 
 **Seamless Loading Screen** is a mod that takes a screenshot of the game when you leave a world or server, and displays it when you rejoin it.
